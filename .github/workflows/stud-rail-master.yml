@@ -18,8 +18,8 @@ jobs:
     name: ESP driver tests (native)
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
       - run: pip install platformio
       - run: pio test -e native
@@ -41,8 +41,8 @@ jobs:
       run:
         working-directory: app
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
       - name: Install
         run: pip install ".[window,dev]"
@@ -67,7 +67,7 @@ jobs:
           curl -fsSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           APPIMAGETOOL=./appimagetool packaging/linux/build_appimage.sh dist/StudRailMaster StudRailMaster-x86_64.AppImage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.artifact }}
           path: app/StudRailMaster-*
@@ -79,9 +79,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with: { path: out, merge-multiple: true }
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: out/*
           body: |
