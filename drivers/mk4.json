@@ -1,0 +1,83 @@
+{
+  "$schema": "./driver.schema.json",
+  "id": "mk4",
+  "name": "Mould King 4.0",
+  "runsOn": ["esp32", "pc"],
+  "transport": {
+    "kind": "advert",
+    "companyId": 65520,
+    "flags": 2,
+    "intervalMs": 100,
+    "connectable": false,
+    "identity": "AE 18 F3"
+  },
+  "ports": ["A", "B", "C", "D"],
+  "slots": 3,
+  "levels": 7,
+  "pairMs": 2000,
+  "heartbeatMs": 100,
+  "watchdog": true,
+  "notes": "No connection: one advertising telegram drives up to 3 hubs (slot chosen with the button on the hub, slot 0 after power-on). Without the flags AD 02 01 02 the hub ignores the telegrams. The hub learns the identity from the connect telegram.",
+  "vectors": {
+    "crypt": [
+      {
+        "plain": "AD 25 95 80 80 80 E7 52",
+        "crypt": "6D B6 43 CF 7E 8F 47 11 48 38 6B 38 D1 7A CD E6 63 25 13 14 15 16 17 18",
+        "source": "HCI snoop MK Tech app"
+      },
+      {
+        "plain": "7D 25 95 88 88 88 88 88 88 82",
+        "crypt": "6D B6 43 CF 7E 8F 47 11 98 38 6B 30 D9 72 A2 3C 6F 56 D4 02 15 16 17 18",
+        "source": "HCI snoop MK Tech app"
+      },
+      {
+        "plain": "7D 25 95 18 88 88 88 88 88 82",
+        "crypt": "6D B6 43 CF 7E 8F 47 11 98 38 6B A0 D9 72 A2 3C 6F 56 00 31 15 16 17 18",
+        "source": "HCI snoop MK Tech app"
+      },
+      {
+        "plain": "AD AE 18 80 80 80 F3 52",
+        "crypt": "6D B6 43 CF 7E 8F 47 11 48 B3 E6 38 D1 7A D9 E6 70 17 13 14 15 16 17 18",
+        "note": "connect AE 18 (used by ESP and PC)"
+      }
+    ],
+    "connect": [
+      {
+        "identity": "25 95 E7",
+        "plain": "AD 25 95 80 80 80 E7 52",
+        "source": "capture"
+      },
+      {
+        "identity": "AE 18 F3",
+        "plain": "AD AE 18 80 80 80 F3 52"
+      }
+    ],
+    "data": [
+      {
+        "identity": "25 95 E7",
+        "levels": [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "plain": "7D 25 95 18 88 88 88 88 88 82",
+        "source": "capture"
+      },
+      {
+        "identity": "AE 18 F3",
+        "levels": [0, 7, 1, 0, -1, 0, 0, 0, 0, 0, 0, 3],
+        "plain": "7D AE 18 8F 98 18 88 88 8B 82",
+        "note": "checked on the hub 28.10.2026"
+      },
+      {
+        "identity": "AE 18 F3",
+        "levels": [-7, 7, -3, 3, 0, 0, 0, 0, 5, -5, 0, 0],
+        "plain": "7D AE 18 7F 3B 88 88 D5 88 82"
+      }
+    ],
+    "level": [[0, 0], [1, 1], [14, 1], [15, 2], [50, 4], [99, 7], [100, 7], [-1, -1], [-100, -7], [150, 7]],
+    "advData": [
+      {
+        "plain": "AD 25 95 80 80 80 E7 52",
+        "adv": "02 01 02 1B FF F0 FF 6D B6 43 CF 7E 8F 47 11 48 38 6B 38 D1 7A CD E6 63 25 13 14 15 16 17 18",
+        "source": "capture"
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Stud Rail Master driver manifest",
+  "description": "Shared between the ESP32 firmware (C++) and the PC app (Python). Both implementations must reproduce every test vector byte for byte.",
+  "type": "object",
+  "required": ["id", "name", "runsOn", "transport", "ports", "heartbeatMs", "watchdog", "vectors"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+$", "description": "Hub type key stored in configs (\"type\" field)."},
+    "name": {"type": "string"},
+    "runsOn": {"type": "array", "items": {"enum": ["esp32", "pc"]}, "description": "Where an implementation exists today."},
+    "transport": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["gatt", "advert"], "description": "gatt = one BLE connection per hub; advert = connectionless broadcast, one sender for many hubs."},
+        "service": {"type": "string"},
+        "write": {"type": "string"},
+        "withResponse": {"type": "boolean"},
+        "namePrefix": {"type": "string", "description": "Advertised name prefix used to recognise the hub in a scan."},
+        "advertisedService": {"type": "string", "description": "Service UUID in the advertisement used to recognise the hub in a scan."},
+        "notify": {"type": "boolean", "description": "gatt only: subscribe to notifications on the write characteristic."},
+        "addressType": {"enum": ["public", "random"]},
+        "companyId": {"type": "integer"},
+        "flags": {"type": "integer", "description": "Value of the Flags AD structure that must precede the manufacturer data."},
+        "intervalMs": {"type": "integer"},
+        "connectable": {"type": "boolean"},
+        "identity": {"type": "string"}
+      }
+    },
+    "ports": {"type": "array", "items": {"type": "string"}},
+    "sharedSpeed": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}, "description": "Port groups that can only run at one common speed."},
+    "slots": {"type": "integer", "description": "advert only: hubs addressable by one telegram."},
+    "levels": {"type": "integer"},
+    "pairMs": {"type": "integer", "description": "advert only: how long the pairing telegram is sent."},
+    "heartbeatMs": {"type": "integer", "description": "Resend interval even when nothing changes."},
+    "armWithStop": {"type": "integer", "description": "gatt only: stop packets to send right after connecting."},
+    "watchdog": {"type": "boolean", "description": "true = the hub stops by itself when commands stop arriving."},
+    "minSpeedByte": {"type": "integer"},
+    "notes": {"type": "string"},
+    "vectors": {"type": "object", "description": "Test vectors, keyed by function name. See drivers/README.md."}
+  }
+}

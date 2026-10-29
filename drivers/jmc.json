@@ -1,0 +1,116 @@
+{
+  "$schema": "./driver.schema.json",
+  "id": "jmc",
+  "name": "JMC BLE hub (JG_JMC-…)",
+  "runsOn": ["esp32", "pc"],
+  "transport": {
+    "kind": "gatt",
+    "service": "0000fff0-0000-1000-8000-00805f9b34fb",
+    "write": "0000fff2-0000-1000-8000-00805f9b34fb",
+    "withResponse": true,
+    "namePrefix": "JG_JMC",
+    "addressType": "public"
+  },
+  "ports": ["A", "B", "C", "D"],
+  "sharedSpeed": [["A", "B"], ["C", "D"]],
+  "heartbeatMs": 100,
+  "armWithStop": 3,
+  "watchdog": false,
+  "minSpeedByte": 16,
+  "notes": "Hub ignores drive commands until it has received one stop packet after power-on. No watchdog: the motor keeps running without packets, so the controller must send stop on e-stop, disconnect and exit.",
+  "vectors": {
+    "build": [
+      {
+        "cmds": [[1, 147], [0, 0], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 01 93 00 00 01 61",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[-1, 223], [0, 0], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 02 DF 00 00 01 AE",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [1, 160], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 08 A0 00 00 01 75",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [-1, 189], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 04 BD 00 00 01 8E",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [0, 0], [1, 255], [0, 0]],
+        "frame": "5A 6B 02 00 05 00 00 01 FF 01 CD",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [0, 0], [-1, 154], [0, 0]],
+        "frame": "5A 6B 02 00 05 00 00 02 9A 01 69",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [0, 0], [0, 0], [1, 191]],
+        "frame": "5A 6B 02 00 05 00 00 08 BF 01 94",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [0, 0], [0, 0], [-1, 213]],
+        "frame": "5A 6B 02 00 05 00 00 04 D5 01 A6",
+        "source": "capture of the original app"
+      },
+      {
+        "cmds": [[0, 0], [0, 0], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 00 00 00 00 01 CD",
+        "source": "capture (stop)"
+      },
+      {
+        "cmds": [[1, 144], [-1, 192], [0, 0], [0, 0]],
+        "frame": "5A 6B 02 00 05 05 C0 00 00 01 92",
+        "note": "pair A/B: higher speed wins"
+      },
+      {
+        "cmds": [[1, 64], [0, 0], [-1, 128], [1, 32]],
+        "frame": "5A 6B 02 00 05 01 40 0A 80 01 98",
+        "note": "both pairs independent"
+      },
+      {
+        "cmds": [[1, 0], [-1, 0], [1, 0], [-1, 0]],
+        "frame": "5A 6B 02 00 05 00 00 00 00 01 CD",
+        "note": "speed 0 = stop"
+      }
+    ],
+    "speedFromPercent": [[0, 0], [1, 16], [2, 18], [50, 134], [99, 252], [100, 255], [-1, 16], [-100, 255]],
+    "encodePercent": [
+      {
+        "percent": [0, 0, 0, 0],
+        "frame": "5A 6B 02 00 05 00 00 00 00 01 CD"
+      },
+      {
+        "percent": [100, 0, 0, 0],
+        "frame": "5A 6B 02 00 05 01 FF 00 00 01 CD"
+      },
+      {
+        "percent": [-100, 0, 0, 0],
+        "frame": "5A 6B 02 00 05 02 FF 00 00 01 CE"
+      },
+      {
+        "percent": [0, 30, 0, 0],
+        "frame": "5A 6B 02 00 05 08 56 00 00 01 2B"
+      },
+      {
+        "percent": [50, -50, 0, 0],
+        "frame": "5A 6B 02 00 05 05 86 00 00 01 58"
+      },
+      {
+        "percent": [0, 0, 1, -100],
+        "frame": "5A 6B 02 00 05 00 00 05 FF 01 D1"
+      },
+      {
+        "percent": [25, 75, -60, 10],
+        "frame": "5A 6B 02 00 05 09 C2 0A 9E 01 40"
+      }
+    ]
+  }
+}

@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#24282B">
+<title>Stud Rail Master</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23383E42'/%3E%3Cpath d='M2 14h28M2 18h28' stroke='%23fff' stroke-width='2'/%3E%3Cg fill='%23F90'%3E%3Ccircle cx='10' cy='7' r='4.5'/%3E%3Ccircle cx='22' cy='7' r='4.5'/%3E%3Ccircle cx='10' cy='25' r='4.5'/%3E%3Ccircle cx='22' cy='25' r='4.5'/%3E%3C/g%3E%3C/svg%3E">
+<!-- Alles lokal: Schriften liegen im Paket (SIL OFL, fonts/OFL.txt), die CSP des Servers blockiert jede externe Adresse. -->
+<style>
+@font-face{font-family:'Barlow';font-weight:400;src:url(fonts/Barlow-Regular.ttf)}
+@font-face{font-family:'Barlow';font-weight:600;src:url(fonts/Barlow-SemiBold.ttf)}
+@font-face{font-family:'Barlow Condensed';font-weight:600;src:url(fonts/BarlowCondensed-SemiBold.ttf)}
+@font-face{font-family:'Barlow Condensed';font-weight:700;src:url(fonts/BarlowCondensed-Bold.ttf)}
+@font-face{font-family:'Barlow Condensed';font-weight:800;src:url(fonts/BarlowCondensed-ExtraBold.ttf)}
+/* Farben und Schriften (Anthrazit/Orange, Barlow) */
+:root{--orange:#FF9900;--orange-hell:#FFC266;--orange-tief:#E08600;--anthrazit:#383E42;--tief:#24282B;--mittel:#5A6268;
+--text:#E6E8EA;--text-2:#9AA1A7;--linie:#ffffff1f;--flaeche:#ffffff0d;--gruen:#2F9E5B;--rot:#D64545;
+--kopf:'Barlow Condensed','Arial Narrow',sans-serif;--fliess:'Barlow',system-ui,sans-serif}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:var(--tief);color:var(--text);font:16px/1.5 var(--fliess);min-height:100vh;display:flex;flex-direction:column}
+[hidden]{display:none!important}
+.i{width:22px;height:22px;flex:none}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--tief);border-bottom:1px solid var(--linie);position:sticky;top:0;z-index:5}
+.marke{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.marke svg{width:36px;height:36px;flex:none}
+.marke b{font:800 19px/1 var(--kopf);letter-spacing:.5px;display:block;white-space:nowrap}
+.marke span{font:700 11px/1 var(--kopf);letter-spacing:3px;color:var(--orange);display:flex;align-items:center;gap:6px;margin-top:4px;text-transform:uppercase;white-space:nowrap}
+.marke span::before{content:"";width:16px;height:3px;border-radius:2px;background:var(--orange)}
+button,.btn{font:700 15px var(--kopf);letter-spacing:1px;text-transform:uppercase;padding:9px 14px;border-radius:10px;border:2px solid var(--mittel);background:transparent;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+button:hover{border-color:var(--orange)}
+button:disabled{opacity:.5;cursor:default;border-color:var(--mittel)}
+button.primaer{background:var(--orange);border-color:var(--orange);color:var(--tief)}
+button.primaer:hover{background:var(--orange-tief)}
+button.rot{background:var(--rot);border-color:var(--rot);color:#fff}
+.nur-icon{padding:7px}
+main{width:100%;max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:16px;align-content:start;flex:1}
+.mute{color:var(--text-2);font-size:14px}
+.hinweis{display:flex;gap:12px;padding:12px 14px;border-radius:10px;border-left:5px solid var(--rot);background:#D6454526;font-size:15px}
+.hinweis b{font:700 15px var(--kopf);letter-spacing:1px;text-transform:uppercase;display:block}
+.hinweis .i{color:var(--rot)}
+.hinweis.info{border-left-color:var(--orange);background:#FF99001f}.hinweis.info .i{color:var(--orange)}
+main a{color:var(--orange)}main a:hover{color:var(--orange-hell)}
+footer.motto{text-align:center;padding:14px 16px 18px;font:600 15px var(--kopf);letter-spacing:1px;color:var(--text-2)}
+footer.motto b{color:var(--orange);font-weight:700}
+
+/* Fahren */
+#driveView{max-width:900px}
+.kopf{display:flex;justify-content:space-between;align-items:center;font:600 14px var(--kopf);letter-spacing:1px;color:var(--text-2);text-transform:uppercase;gap:10px}
+.kopf .st{display:inline-flex;gap:6px;align-items:center}
+.kopf .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.kopf .ok{color:var(--gruen)}.kopf .warn{color:var(--orange)}
+.hebel{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.hebel>div{text-align:center;min-width:0}
+.bahn{height:clamp(240px,52vh,500px);border-radius:14px;background:var(--flaeche);position:relative;overflow:hidden;border:1px solid var(--linie);touch-action:none;cursor:ns-resize;user-select:none}
+.bahn .fuell{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(var(--orange-hell),var(--orange))}
+.bahn .griff{position:absolute;left:8px;right:8px;height:12px;border-radius:6px;background:#fff;box-shadow:0 2px 6px #0008}
+.bahn .wert{position:absolute;top:8px;left:0;right:0;font:700 30px var(--kopf);text-shadow:0 1px 3px #0008;pointer-events:none}
+.bahn .nr{position:absolute;top:10px;left:10px;font:700 13px var(--kopf);letter-spacing:1px;color:#fff9;pointer-events:none;text-transform:uppercase}
+.bahn .lok{position:absolute;top:50px;left:6px;right:6px;padding:6px 4px;border-radius:8px;background:#24282Bd9;font:700 clamp(15px,2.2vw,20px)/1.2 var(--kopf);letter-spacing:.5px;color:#fff;overflow-wrap:anywhere;pointer-events:none;display:grid;gap:6px}
+.bahn .lok img{display:block;width:100%;max-height:70px;object-fit:contain;border-radius:5px;background:linear-gradient(#EEF0F2,#C9CED2);padding:3px}
+.bahn .lok i{font-style:normal;color:var(--orange)}
+.bahn.aus{opacity:.55;cursor:default}
+.dir{margin-top:10px;width:100%;min-height:56px;justify-content:center;border-radius:12px;border:0;font:800 clamp(17px,2.6vw,24px) var(--kopf);letter-spacing:1px;background:#ffffff14;color:var(--text-2)}
+.dir.vor{background:var(--orange);color:var(--tief)}
+.dir:disabled{opacity:.6;cursor:default}
+.dir.wechsel{animation:blink .6s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+.stopp{width:100%;padding:16px;border:0;border-radius:12px;background:var(--rot);color:#fff;font:800 22px var(--kopf);letter-spacing:2px;justify-content:center}
+.stopp .i{width:26px;height:26px}
+kbd{font:12px ui-monospace,monospace;border:1px solid var(--mittel);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+
+/* Einstellungen */
+section{background:var(--anthrazit);border:1px solid var(--linie);border-radius:12px;padding:16px}
+h2{font:800 20px/1.1 var(--kopf);letter-spacing:.5px;text-transform:uppercase;margin:0 0 10px}
+h3{font:700 16px/1.1 var(--kopf);letter-spacing:1px;text-transform:uppercase;margin:16px 0 8px;color:var(--text-2)}
+input,select{font:inherit;font-size:15px;padding:7px 9px;border-radius:8px;border:1px solid var(--linie);background:var(--tief);color:var(--text);min-width:0}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--orange);outline-offset:-1px}
+input[type=checkbox]{accent-color:var(--orange);width:18px;height:18px;vertical-align:-3px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.ctrl{border:1px solid var(--linie);border-radius:10px;padding:12px;display:grid;gap:10px;background:var(--flaeche)}
+.ctrl .top{display:flex;align-items:center;gap:8px}
+.ctrl .top b{flex:1;font:700 16px var(--kopf);letter-spacing:.5px;text-transform:uppercase}
+.ctrl .pct{font:700 22px var(--kopf);min-width:64px;text-align:right;color:var(--orange)}
+.ctrl input[type=range]{width:100%;height:30px;accent-color:var(--orange);padding:0;border:0;background:none}
+.led{width:16px;height:16px;border-radius:50%;background:var(--tief);border:1px solid var(--mittel);flex:none}
+.led.on{background:var(--orange);border-color:var(--orange);box-shadow:0 0 10px var(--orange)}
+.bar{position:relative;height:12px;background:var(--tief);border:1px solid var(--linie);border-radius:6px;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;background:var(--orange)}
+.bar:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid var(--mittel)}
+.hubs{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.hub{border:1px solid var(--linie);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--flaeche);align-content:start}
+.hub.abgestellt{opacity:.8;border-style:dashed}
+.hub .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hub .row input[type=text]{flex:1}
+.bild{position:relative;height:110px;border-radius:8px;background:var(--tief);border:1px dashed var(--mittel);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;color:var(--text-2);font:600 14px var(--kopf);letter-spacing:1px;text-transform:uppercase;gap:8px}
+.bild:hover{border-color:var(--orange);color:var(--orange)}
+.bild img{width:100%;height:100%;object-fit:contain;background:linear-gradient(#EEF0F2,#C9CED2)}
+.bild .weg{position:absolute;top:6px;right:6px;padding:2px 8px;font-size:13px;background:#24282Bd9}
+.bild.drop{border-color:var(--orange);background:#FF99001a}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font:700 13px var(--kopf);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;background:#ffffff14;color:var(--text-2)}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.ok{background:#2F9E5B33;color:#5FD08E}
+.badge.warn{background:#FF99002b;color:var(--orange-hell)}
+table{width:100%;border-collapse:collapse}
+td{padding:3px 4px;vertical-align:middle}
+td.port{font:700 16px var(--kopf);width:24px;color:var(--orange)}
+td.val{width:90px}
+td label{white-space:nowrap}
+.conflict{color:var(--orange-hell);font-size:13px}
+.fehler{color:#F08A8A;font-size:13px;overflow-wrap:anywhere}
+.klein{padding:5px 10px;font-size:13px}
+.liste{list-style:none;padding:0;margin:8px 0 0}
+.liste li{display:flex;gap:8px;align-items:center;padding:7px 0;flex-wrap:wrap;border-bottom:1px dashed var(--linie)}
+.liste li b{font:700 17px var(--kopf);letter-spacing:.5px}
+.liste label{display:flex;gap:8px;align-items:center}
+.liste img{height:34px;max-width:90px;object-fit:contain;background:#D9DDE0;border-radius:4px;padding:2px}
+code{font:13px ui-monospace,monospace;background:var(--tief);padding:1px 5px;border-radius:4px}
+.form{display:grid;grid-template-columns:max-content 1fr;gap:8px 10px;align-items:center;max-width:520px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary{cursor:pointer;font:700 16px var(--kopf);letter-spacing:1px;text-transform:uppercase;color:var(--text-2);margin:16px 0 8px}
+#saveBar{position:sticky;bottom:12px;z-index:4;display:flex;gap:10px;align-items:center;justify-content:flex-end;padding:10px 14px;border-radius:12px;background:#24282Bf2;border:1px solid var(--orange);box-shadow:0 6px 20px #000a}
+#saveBar span{flex:1;color:var(--orange-hell);font-size:15px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:15px}
+.kv dt{color:var(--text-2)}.kv dd{margin:0;overflow-wrap:anywhere}
+.ok-t{color:#5FD08E}.warn-t{color:var(--orange-hell)}
+dialog{background:var(--anthrazit);color:var(--text);border:1px solid var(--linie);border-radius:14px;padding:20px;max-width:min(560px,92vw)}
+dialog::backdrop{background:#000a}
+#help{width:min(980px,96vw);height:min(92vh,1100px);max-width:none;padding:0;overflow:hidden}
+#help[open]{display:flex;flex-direction:column}
+#help .kopf{padding:10px 14px;border-bottom:1px solid var(--linie);background:var(--tief)}
+#help iframe{flex:1;border:0;width:100%;background:var(--tief)}
+@media (max-width:480px){#net{display:none}td.val{width:56px}.marke b{font-size:16px}.hebel{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}}
+
+/* Ladebildschirm */
+#splash{position:fixed;inset:0;z-index:50;background:radial-gradient(120% 90% at 50% 20%,#3A4045 0%,#24282B 55%,#1B1E20 100%);display:flex;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s;overflow:hidden}
+#splash.weg{opacity:0;visibility:hidden}
+.sp{width:min(640px,92vw);text-align:center;display:grid;gap:18px;justify-items:center}
+.sp-logo{width:118px;height:118px;filter:drop-shadow(0 10px 24px #0009)}
+.sp-logo .stud{transform-box:fill-box;transform-origin:center;animation:stud .55s cubic-bezier(.3,1.6,.5,1) backwards}
+.sp-logo .stud:nth-of-type(2){animation-delay:.12s}.sp-logo .stud:nth-of-type(3){animation-delay:.24s}.sp-logo .stud:nth-of-type(4){animation-delay:.36s}
+@keyframes stud{from{transform:scale(0)}}
+.sp-logo .gleis{stroke-dasharray:60;animation:gleis .8s .5s ease-out backwards}
+@keyframes gleis{from{stroke-dashoffset:60}}
+.sp h1{margin:0;font:800 clamp(34px,7vw,56px)/1 var(--kopf);letter-spacing:2px;animation:auf .7s .5s ease-out backwards}
+.sp h1 span{color:var(--orange)}
+@keyframes auf{from{opacity:0;transform:translateY(12px)}}
+.sp-strecke{position:relative;width:100%;height:96px;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
+.sp-schwellen{position:absolute;left:0;right:-40px;bottom:6px;height:12px;background:repeating-linear-gradient(90deg,#5A6268 0 6px,transparent 6px 20px);animation:fahrt .5s linear infinite}
+.sp-schienen{position:absolute;left:0;right:0;bottom:12px;height:3px;background:#C9CED2;box-shadow:0 -0px 0 #C9CED2}
+@keyframes fahrt{to{transform:translateX(-20px)}}
+.sp-zug{position:absolute;left:50%;bottom:13px;width:300px;margin-left:-150px;animation:wackel .9s ease-in-out infinite alternate}
+@keyframes wackel{to{transform:translateY(-1.5px)}}
+.sp-zug .rad{transform-box:fill-box;transform-origin:center;animation:dreh .5s linear infinite}
+@keyframes dreh{to{transform:rotate(360deg)}}
+.sp-zug .puff{transform-box:fill-box;transform-origin:center;animation:puff 1.6s ease-out infinite;opacity:0}
+.sp-zug .puff:nth-of-type(2){animation-delay:.53s}.sp-zug .puff:nth-of-type(3){animation-delay:1.06s}
+@keyframes puff{0%{opacity:.9;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(-46px,-30px) scale(1.6)}}
+.sp-schritte{list-style:none;margin:0;padding:0;display:grid;gap:6px;font:600 16px var(--kopf);letter-spacing:1px;text-transform:uppercase;color:var(--text-2);min-height:100px}
+.sp-schritte li{display:flex;gap:10px;align-items:center;justify-content:center}
+.sp-schritte li::before{content:"";width:10px;height:10px;border-radius:50%;border:2px solid var(--mittel)}
+.sp-schritte li.busy::before{border-color:var(--orange);border-top-color:transparent;animation:dreh .7s linear infinite}
+.sp-schritte li.ok{color:var(--text)}.sp-schritte li.ok::before{background:var(--gruen);border-color:var(--gruen)}
+.sp-schritte li.warn{color:var(--orange-hell)}.sp-schritte li.warn::before{background:var(--orange);border-color:var(--orange)}
+.sp-balken{width:min(360px,80%);height:6px;border-radius:3px;background:#ffffff14;overflow:hidden}
+.sp-balken i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange-tief),var(--orange-hell));transition:width .5s ease}
+.sp-motto{margin:4px 0 0;font:italic 600 17px var(--fliess);color:var(--orange-hell);animation:auf 1s 1s ease-out backwards}
+.sp-klein{font-size:12px;color:var(--mittel);letter-spacing:1px}
+@media (prefers-reduced-motion:reduce){#splash *,#splash *::before{animation:none!important}}
+</style>
+</head>
+<body>
+<svg style="display:none">
+<symbol id="marke" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#383E42"/><g fill="#5A6268"><rect x="8" y="25" width="3" height="14" rx="1"/><rect x="17" y="25" width="3" height="14" rx="1"/><rect x="26" y="25" width="3" height="14" rx="1"/><rect x="35" y="25" width="3" height="14" rx="1"/><rect x="44" y="25" width="3" height="14" rx="1"/><rect x="53" y="25" width="3" height="14" rx="1"/></g><path d="M4 28.5h56M4 35.5h56" stroke="#fff" stroke-width="3" stroke-linecap="round"/><g fill="#F90"><circle cx="20" cy="14" r="8"/><circle cx="44" cy="14" r="8"/><circle cx="20" cy="50" r="8"/><circle cx="44" cy="50" r="8"/></g><g fill="none" stroke="#FFC266" stroke-width="1.5"><circle cx="20" cy="14" r="5"/><circle cx="44" cy="14" r="5"/><circle cx="20" cy="50" r="5"/><circle cx="44" cy="50" r="5"/></g></symbol>
+<symbol id="i-notstopp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.3 2h7.4L22 8.3v7.4L15.7 22H8.3L2 15.7V8.3z"/><path d="M7.5 12h9"/></symbol>
+<symbol id="i-einstellungen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h10M19 6h2M3 12h4M11 12h10M3 18h12M19 18h2"/><circle cx="16" cy="6" r="2.5"/><circle cx="9" cy="12" r="2.5"/><circle cx="17" cy="18" r="2.5"/></symbol>
+<symbol id="i-lok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16V9h9V4h7v12z"/><path d="M18 9h2.5l1.5 7h-4"/><path d="M5 9V6"/><circle cx="6" cy="18.5" r="2"/><circle cx="14" cy="18.5" r="2"/><path d="M13 7h3"/></symbol>
+<symbol id="i-warnung" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5M12 8h.01"/></symbol>
+<symbol id="i-hilfe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+<symbol id="i-bild" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L5 20"/></symbol>
+<symbol id="i-funk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/></symbol>
+</svg>
+
+<!-- Ladebildschirm: bleibt, bis das Programm bereit ist (mindestens 2,6 s, Klick überspringt danach) -->
+<div id="splash" role="status" aria-live="polite">
+<div class="sp">
+<svg class="sp-logo" viewBox="0 0 64 64" aria-hidden="true">
+<rect width="64" height="64" rx="14" fill="#383E42"/>
+<g fill="#5A6268"><rect x="8" y="25" width="3" height="14" rx="1"/><rect x="17" y="25" width="3" height="14" rx="1"/><rect x="26" y="25" width="3" height="14" rx="1"/><rect x="35" y="25" width="3" height="14" rx="1"/><rect x="44" y="25" width="3" height="14" rx="1"/><rect x="53" y="25" width="3" height="14" rx="1"/></g>
+<path class="gleis" d="M4 28.5h56M4 35.5h56" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<g><g class="stud"><circle cx="20" cy="14" r="8" fill="#F90"/><circle cx="20" cy="14" r="5" fill="none" stroke="#FFC266" stroke-width="1.5"/></g><g class="stud"><circle cx="44" cy="14" r="8" fill="#F90"/><circle cx="44" cy="14" r="5" fill="none" stroke="#FFC266" stroke-width="1.5"/></g><g class="stud"><circle cx="20" cy="50" r="8" fill="#F90"/><circle cx="20" cy="50" r="5" fill="none" stroke="#FFC266" stroke-width="1.5"/></g><g class="stud"><circle cx="44" cy="50" r="8" fill="#F90"/><circle cx="44" cy="50" r="5" fill="none" stroke="#FFC266" stroke-width="1.5"/></g></g>
+</svg>
+<h1>STUD RAIL <span>MASTER</span></h1>
+<div class="sp-strecke" aria-hidden="true">
+<div class="sp-schwellen"></div><div class="sp-schienen"></div>
+<!-- Zug aus Bausteinen: Lok + zwei Wagen, Noppen obenauf -->
+<svg class="sp-zug" viewBox="0 0 300 74">
+<g fill="#E6E8EA"><circle class="puff" cx="249" cy="14" r="6"/><circle class="puff" cx="249" cy="14" r="6"/><circle class="puff" cx="249" cy="14" r="6"/></g>
+<g><rect x="2" y="26" width="76" height="30" rx="4" fill="#5A6268"/><rect x="8" y="32" width="64" height="10" rx="2" fill="#383E42"/>
+<g fill="#7B848B"><rect x="9" y="21" width="10" height="5" rx="1.5"/><rect x="23" y="21" width="10" height="5" rx="1.5"/><rect x="37" y="21" width="10" height="5" rx="1.5"/><rect x="51" y="21" width="10" height="5" rx="1.5"/><rect x="65" y="21" width="10" height="5" rx="1.5"/></g></g>
+<g><rect x="84" y="26" width="76" height="30" rx="4" fill="#383E42" stroke="#5A6268"/><rect x="90" y="32" width="64" height="10" rx="2" fill="#FFC266" opacity=".8"/>
+<g fill="#5A6268"><rect x="91" y="21" width="10" height="5" rx="1.5"/><rect x="105" y="21" width="10" height="5" rx="1.5"/><rect x="119" y="21" width="10" height="5" rx="1.5"/><rect x="133" y="21" width="10" height="5" rx="1.5"/><rect x="147" y="21" width="10" height="5" rx="1.5"/></g></g>
+<g><rect x="166" y="30" width="94" height="26" rx="4" fill="#FF9900"/><rect x="166" y="12" width="34" height="44" rx="4" fill="#383E42"/><rect x="172" y="18" width="22" height="13" rx="2" fill="#FFC266"/>
+<rect x="244" y="18" width="10" height="13" rx="2" fill="#383E42"/><path d="M260 48h12l-4 8h-8z" fill="#5A6268"/><circle cx="258" cy="38" r="3.5" fill="#FFF3D6"/>
+<g fill="#FFC266"><rect x="206" y="25" width="10" height="5" rx="1.5"/><rect x="220" y="25" width="10" height="5" rx="1.5"/><rect x="234" y="25" width="10" height="5" rx="1.5"/></g>
+<g fill="#5A6268"><rect x="170" y="7" width="10" height="5" rx="1.5"/><rect x="186" y="7" width="10" height="5" rx="1.5"/></g></g>
+<g fill="#1E2124" stroke="#9AA1A7" stroke-width="2">
+<g class="rad"><circle cx="18" cy="60" r="7"/><path d="M18 54v12M12 60h12"/></g><g class="rad"><circle cx="62" cy="60" r="7"/><path d="M62 54v12M56 60h12"/></g>
+<g class="rad"><circle cx="100" cy="60" r="7"/><path d="M100 54v12M94 60h12"/></g><g class="rad"><circle cx="144" cy="60" r="7"/><path d="M144 54v12M138 60h12"/></g>
+<g class="rad"><circle cx="186" cy="58" r="9"/><path d="M186 50v16M178 58h16"/></g><g class="rad"><circle cx="212" cy="58" r="9"/><path d="M212 50v16M204 58h16"/></g><g class="rad"><circle cx="238" cy="58" r="9"/><path d="M238 50v16M230 58h16"/></g></g>
+<path d="M78 46h6M160 46h6" stroke="#9AA1A7" stroke-width="3"/>
+</svg>
+</div>
+<ul class="sp-schritte" id="spSteps"></ul>
+<div class="sp-balken"><i id="spBar"></i></div>
+<p class="sp-motto">In Herbrechtingen ist es immer am schönsten!</p>
+<div class="sp-klein" id="spVer"></div>
+</div>
+</div>
+
+<header>
+<div class="marke"><svg><use href="#marke"/></svg><div><b>STUD RAIL MASTER</b><span id="modus">PC</span></div></div>
+<span class="mute" id="net"></span>
+<button class="nur-icon" id="langBtn" title="Sprache / Language">EN</button>
+<button class="nur-icon" id="helpBtn" title="Hilfe"><svg class="i"><use href="#i-hilfe"/></svg></button>
+<button class="nur-icon" id="aboutBtn" title="Über"><svg class="i"><use href="#i-info"/></svg></button>
+<button class="nur-icon" id="navBtn" title="Einstellungen"><svg class="i"><use href="#i-einstellungen"/></svg></button>
+<button class="rot nur-icon" id="estopTop" title="Not-Stopp" hidden><svg class="i"><use href="#i-notstopp"/></svg></button>
+</header>
+
+<main id="driveView">
+<div class="kopf"><span id="kopfOrt">Fahren</span><span class="st" id="hubCount"></span></div>
+<div class="mute" id="hubDetail"></div>
+<div class="hinweis" id="banner" hidden><svg class="i"><use href="#i-warnung"/></svg><div data-t><b>Not-Stopp aktiv</b>Alle benutzten Regler auf 0 stellen, dann geht es weiter.</div></div>
+<div class="hinweis info" id="liveBanner" hidden><svg class="i"><use href="#i-funk"/></svg><div id="liveText"></div></div>
+<div class="hinweis info" id="bleBanner" hidden><svg class="i"><use href="#i-warnung"/></svg><div id="bleText"></div></div>
+<div class="hebel" id="drive"></div>
+<section id="driveHint" data-t hidden>Noch kein Regler einem Hub zugeordnet. Unter <b>Einstellungen</b> festlegen und speichern.</section>
+<button class="stopp" id="estopBtn"><svg class="i"><use href="#i-notstopp"/></svg><span data-t>NOT-STOPP</span></button>
+<p class="mute" id="driveInfo"></p>
+</main>
+
+<main id="setupView" hidden>
+<div class="hinweis info" id="liveSetup" hidden><svg class="i"><use href="#i-funk"/></svg><div data-t><b>Live-Link aktiv</b>Der ESP steuert die Hubs. Der Funk dieses PCs ruht, Änderungen hier wirken erst nach dem Beenden des Live-Links.</div></div>
+<section>
+<div class="actions" style="margin-bottom:10px"><h2 style="margin:0;flex:1" data-t>Fahrregler</h2>
+<label class="mute"><span data-t>Anzahl</span> <select id="thCount"></select></label></div>
+<div class="ctrls" id="ctrls"></div>
+<p class="mute" data-t>Schließt sich das Fenster oder antwortet die Seite 2 s nicht, hält das Programm alle Motoren an.</p>
+<div class="actions"><label for="revSec" data-t>Richtungswechsel während der Fahrt</label>
+<input id="revSec" type="number" min="0" max="20" step="0.5" style="width:80px"> <span class="mute" data-t>s von voll vor bis voll zurück, 0 = sofort umschalten</span></div>
+</section>
+
+<section>
+<div class="actions" style="margin-bottom:6px"><h2 style="margin:0;flex:1" data-t>Hubs im Einsatz</h2>
+<button id="addBtn" data-t>+ Neuer Hub</button></div>
+<p class="mute" data-t>Jeden Port einem Fahrregler zuordnen. Ein Regler darf mehrere Ports steuern, auch auf verschiedenen Hubs. Bild per Klick oder Ziehen hinzufügen.</p>
+<div class="hubs" id="hubsOn"></div>
+<p class="mute" id="noneOn" data-t hidden>Kein Hub im Einsatz. Hub anlegen, suchen oder aus dem Depot holen.</p>
+<details id="depotBox" open><summary><span data-t>Depot (abgestellt)</span> <span id="depotN"></span></summary>
+<p class="mute" data-t>Abgestellte Hubs bleiben mit allen Einstellungen und Bild gespeichert. Haken „aktiv“ setzen, um sie wieder einzusetzen.</p>
+<div class="hubs" id="hubsOff"></div></details>
+</section>
+
+<section>
+<h2 data-t>Hubs suchen</h2>
+<div class="actions"><button id="scanBtn" data-t>Scan starten (5 s)</button><span class="mute" id="scanInfo"></span></div>
+<ul class="liste" id="scanList"></ul>
+</section>
+
+<section>
+<h2 data-t>Fernbedienung (ESP)</h2>
+<p class="mute"><span data-t>Abgleich mit der ZugFern-Fernbedienung im Heimnetz. Verbindungen gehen nur zu Adressen im lokalen Netz, nie ins Internet.</span> <a href="#" data-help="sync" data-t>Mehr dazu</a></p>
+<div class="form"><label for="espHost" data-t>Adresse</label><input id="espHost" type="text" placeholder="StudRailMasterQuadro.local"></div>
+<h3 data-t>Hubs übergeben</h3>
+<div class="actions"><button id="espFetch" data-t>Hubs vom ESP holen</button><span class="mute" id="espFetchMsg"></span></div>
+<ul class="liste" id="espList"></ul>
+<p class="mute" data-t>Diese Hubs ins Archiv des ESP schreiben (dort mit „Holen“ einsetzen; Bilder bleiben auf dem PC):</p>
+<ul class="liste" id="espPushList"></ul>
+<div class="actions"><button id="espPush" data-t>An ESP übergeben</button><span class="mute" id="espPushMsg"></span></div>
+<h3>Live-Link</h3>
+<p class="mute" data-t>Der ESP ist Master: Er funkt mit den Hubs, dieser PC zeigt seine Regler und darf mitfahren (wenn am ESP „Schieberegler (GUI)“ eingestellt ist). Der Funk des PCs ruht so lange.</p>
+<div class="actions"><button id="liveBtn" data-t>Live-Link starten</button><span class="mute" id="liveMsg"></span></div>
+</section>
+<div id="saveBar" hidden><span data-t>Ungespeicherte Änderungen</span><button id="undoBtn" data-t>Verwerfen</button><button class="primaer" id="saveBtn" data-t>Speichern</button></div>
+<p class="mute" id="msg"></p>
+</main>
+
+<footer class="motto"><b>Stud Rail Master</b> · <span title="It's always loveliest in Herbrechtingen!">In Herbrechtingen ist es immer am schönsten!</span></footer>
+
+<dialog id="about">
+<h2>Stud Rail Master</h2>
+<dl class="kv" id="aboutKv"></dl>
+<p class="mute" data-t>Dieses Programm nimmt keine Verbindung ins Internet auf: keine Updates, keine Statistik, keine Schriften oder Bilder von fremden Servern. Es funkt nur per Bluetooth mit deinen Hubs und – nur wenn du es startest – mit deiner ZugFern-Fernbedienung im Heimnetz.</p>
+<p style="font:italic 600 16px var(--fliess);color:var(--orange-hell);margin:10px 0">In Herbrechtingen ist es immer am schönsten!</p>
+<div class="actions"><button id="aboutHelp" data-t>Anleitung öffnen</button><span style="flex:1"></span><button class="primaer" id="aboutClose">OK</button></div>
+</dialog>
+<!-- Hilfe als Overlay: die Fahrseite fragt weiter ab, sonst löste nach 2 s der Not-Stopp aus -->
+<dialog id="help"><div class="kopf"><span data-t>Hilfe</span><span style="flex:1"></span><button class="klein" id="helpClose" data-t>Schließen</button></div><iframe id="helpFrame" title="Hilfe"></iframe></dialog>
+<input type="file" id="fileIn" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// Sprache: Deutsch ist der Text im Code, EN übersetzt ihn (Schlüssel = deutscher Text)
+const EN={
+'Not-Stopp aktiv':'Emergency stop active','NOT-STOPP':'EMERGENCY STOP','Not-Stopp':'Emergency stop',
+'<b>Not-Stopp aktiv</b>Alle benutzten Regler auf 0 stellen, dann geht es weiter.':'<b>Emergency stop active</b>Set all used throttles to 0 to continue.',
+'Noch kein Regler einem Hub zugeordnet. Unter <b>Einstellungen</b> festlegen und speichern.':'No throttle is assigned to a hub yet. Set it up under <b>Settings</b> and save.',
+'Fahren':'Drive','Einstellungen':'Settings','Fahrregler':'Throttles','Anzahl':'Count','Über':'About',
+'Schließt sich das Fenster oder antwortet die Seite 2 s nicht, hält das Programm alle Motoren an.':'If the window closes or the page stops answering for 2 s, the program stops all motors.',
+'Richtungswechsel während der Fahrt':'Direction change while moving',
+'s von voll vor bis voll zurück, 0 = sofort umschalten':'s from full forward to full reverse, 0 = switch instantly',
+'Hubs im Einsatz':'Hubs in service','+ Neuer Hub':'+ New hub',
+'Jeden Port einem Fahrregler zuordnen. Ein Regler darf mehrere Ports steuern, auch auf verschiedenen Hubs. Bild per Klick oder Ziehen hinzufügen.':'Assign each port to a throttle. One throttle may drive several ports, even on different hubs. Add a picture by clicking or dragging.',
+'Kein Hub im Einsatz. Hub anlegen, suchen oder aus dem Depot holen.':'No hub in service. Add one, scan for one or take one out of the depot.',
+'Depot (abgestellt)':'Depot (parked)',
+'Abgestellte Hubs bleiben mit allen Einstellungen und Bild gespeichert. Haken „aktiv“ setzen, um sie wieder einzusetzen.':'Parked hubs keep all settings and their picture. Tick “active” to put them back into service.',
+'Speichern':'Save','Verwerfen':'Discard','Ungespeicherte Änderungen':'Unsaved changes','Hubs suchen':'Find hubs','Scan starten (5 s)':'Start scan (5 s)',
+'VOR':'FWD','ZURÜCK':'REV','Regler':'Throttle','Richtung umkehren':'Reverse direction','Richtungs-LED':'Direction LED',
+'Zum Fahren den Hebel hoch- oder runterziehen.':'Drag a lever up or down to drive.',
+'Gesteuert wird mit den Potis und Schaltern am ESP.':'Driven by the pots and switches on the ESP.',
+'Name':'Name','JMC (BLE-Verbindung)':'JMC (BLE connection)','Blinken':'blinks','Einlernen':'Pair','aktiv':'active','umpolen':'invert',
+'Hub einschalten, dann „Einlernen“. Slot mit der Taste am Hub wählen (nach dem Einschalten Slot 0).':'Switch the hub on, then “Pair”. Choose the slot with the button on the hub (slot 0 after power-on).',
+'hängen an verschiedenen Reglern – es gilt der größere Speed.':'are on different throttles – the higher speed applies.',
+'Gespeichert ✓':'Saved ✓','Fehler: ':'Error: ','Bild hinzufügen':'Add picture','Bild entfernen':'Remove picture','Löschen':'Delete',
+'Hub löschen? Bild und Einstellungen gehen verloren.':'Delete hub? Its picture and settings will be lost.',
+'Adresse':'Address','neu':'new','Neuer Hub':'New hub','übernehmen':'use','suche …':'searching …','Geräte mit Namen gefunden':'named devices found',
+'Übernommen – Speichern nicht vergessen':'Taken over – don’t forget to save','schon eingetragen':'already added',
+'aus':'off','verbindet':'connecting','verbunden':'connected','getrennt':'disconnected','sendet':'sending','lernt ein':'pairing','Fehler':'error',
+'Fernbedienung (ESP)':'Remote (ESP)',
+'Abgleich mit der ZugFern-Fernbedienung im Heimnetz. Verbindungen gehen nur zu Adressen im lokalen Netz, nie ins Internet.':'Sync with the ZugFern remote on your home network. Connections only go to local network addresses, never to the internet.',
+'Hubs übergeben':'Transfer hubs','Hubs vom ESP holen':'Get hubs from the ESP','An ESP übergeben':'Send to ESP',
+'Diese Hubs ins Archiv des ESP schreiben (dort mit „Holen“ einsetzen; Bilder bleiben auf dem PC):':'Write these hubs into the ESP archive (put them into service there with “Restore”; pictures stay on the PC):',
+'Der ESP ist Master: Er funkt mit den Hubs, dieser PC zeigt seine Regler und darf mitfahren (wenn am ESP „Schieberegler (GUI)“ eingestellt ist). Der Funk des PCs ruht so lange.':'The ESP is the master: it talks to the hubs, this PC shows its throttles and may drive along (if the ESP is set to “Sliders (GUI)”). The PC’s own radio rests meanwhile.',
+'Live-Link starten':'Start live link','Live-Link beenden':'Stop live link','verbinde …':'connecting …',
+'<b>Live-Link aktiv</b>Der ESP steuert die Hubs. Der Funk dieses PCs ruht, Änderungen hier wirken erst nach dem Beenden des Live-Links.':'<b>Live link active</b>The ESP drives the hubs. This PC’s radio rests; changes here take effect after the live link ends.',
+'Live-Link zu':'Live link to','ESP antwortet nicht':'ESP not answering','auf dem ESP':'on the ESP','im Archiv':'in archive','am ESP aktiv':'active on the ESP',
+'Keine Hubs auf dem ESP.':'No hubs on the ESP.','Keine passenden Hubs.':'No suitable hubs.','neu':'new','aktualisiert':'updated','übersprungen':'skipped',
+'Version':'Version','System':'System','Datenordner':'Data folder','Bluetooth':'Bluetooth','Mould-King-Sender':'Mould King sender','Lizenz':'License',
+'Dieses Programm nimmt keine Verbindung ins Internet auf: keine Updates, keine Statistik, keine Schriften oder Bilder von fremden Servern. Es funkt nur per Bluetooth mit deinen Hubs und – nur wenn du es startest – mit deiner ZugFern-Fernbedienung im Heimnetz.':'This program never connects to the internet: no updates, no statistics, no fonts or images from other servers. It only talks Bluetooth to your hubs and – only when you start it – to your ZugFern remote on your home network.',
+'bereit':'ready','nicht verfügbar':'not available','nicht benutzt':'not in use','wird geprüft':'checking','Demo (simuliert)':'demo (simulated)',
+'Kein Bluetooth':'No Bluetooth','Demo-Modus: Hubs werden nur simuliert.':'Demo mode: hubs are only simulated.',
+'Einstellungen laden':'Loading settings','Treiber prüfen':'Checking drivers','Bluetooth suchen':'Looking for Bluetooth','Hubs verbinden':'Connecting hubs',
+'Warte auf das Programm …':'Waiting for the program …','Hilfe':'Help','Mould King freischalten':'Unlock Mould King','Passwort-Fenster …':'Password prompt …','Mould King ist freigeschaltet ✓':'Mould King unlocked ✓','Schließen':'Close','Anleitung öffnen':'Open user guide','Mehr dazu':'Learn more','Leertaste = Not-Stopp':'Space = emergency stop','Bild zu groß (max. 8 MB)':'Picture too large (max. 8 MB)'
+};
+let lang='de';
+try{lang=new URLSearchParams(location.search).get('lang')||localStorage.getItem('lang')||((navigator.language||'de').startsWith('de')?'de':'en');}catch(e){}
+const T=s=>lang==='en'&&EN[s]||s;
+// Zustandsschlüssel der API → Text
+const STATE_DE={off:'aus',connecting:'verbindet',ready:'verbunden',backoff:'getrennt',sending:'sendet',pairing:'lernt ein',error:'Fehler'};
+const TS=k=>T(STATE_DE[k]||k);
+function applyLang(){
+  document.documentElement.lang=lang;
+  $('langBtn').textContent=lang==='en'?'DE':'EN';
+  document.querySelectorAll('[data-t]').forEach(el=>{if(el.dataset.de===undefined)el.dataset.de=el.innerHTML;el.innerHTML=T(el.dataset.de);});
+  $('aboutBtn').title=T('Über');$('helpBtn').title=T('Hilfe');$('estopTop').title=T('Not-Stopp');
+}
+function setLang(l){
+  lang=l;try{localStorage.setItem('lang',l);}catch(e){}
+  applyLang();route();renderAll();renderSteps();
+}
+
+let info=null,config=null,saved=null,state=null,dirty=false;
+const dirty$=v=>{dirty=v;$('saveBar').hidden=!v;};
+function api(path,body,method){
+  const o=body===undefined&&!method?{}:{method:method||'POST',headers:{'Content-Type':'application/json','X-SRM':'1'},body:body instanceof Blob?body:JSON.stringify(body||{})};
+  if(body instanceof Blob)o.headers['Content-Type']=body.type||'application/octet-stream';
+  return fetch(path,o).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j;});
+}
+function bar(v){const w=Math.abs(v)/2;return `<div class="bar"><i style="left:${v<0?50-w:50}%;width:${w}%"></i></div>`;}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const drv=id=>info.drivers.find(d=>d.id===id)||info.drivers[0];
+const imgUrl=n=>n?`img/${encodeURIComponent(n)}`:'';
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+// ---------------- Ladebildschirm ----------------
+const STEPS=[['config','Einstellungen laden'],['drivers','Treiber prüfen'],['bluetooth','Bluetooth suchen'],['hubs','Hubs verbinden']];
+const splashStart=Date.now();let splashDone=false;
+const NO_SPLASH=new URLSearchParams(location.search).get('splash')==='0';  // für Bildschirmfotos/Tests
+if(NO_SPLASH)$('splash').style.transition='none';
+function renderSteps(){
+  if(splashDone)return;
+  if(!info){$('spSteps').innerHTML=`<li class="busy">${T('Warte auf das Programm …')}</li>`;return;}
+  const st=Object.fromEntries((info.steps||[]).map(s=>[s.key,s]));
+  $('spSteps').innerHTML=STEPS.map(([k,l])=>{const s=st[k];return `<li class="${s?s.status:''}" title="${esc(s&&s.detail||'')}">${T(l)}</li>`;}).join('');
+  const done=STEPS.filter(([k])=>st[k]&&st[k].status!=='busy').length;
+  $('spBar').style.width=(done/STEPS.length*100)+'%';
+  $('spVer').textContent=`v${info.version}${info.demo?' · DEMO':''}`;
+}
+async function splashLoop(){
+  try{info=await api('/api/info');}catch(e){info=null;}
+  renderSteps();
+  const ready=info&&info.ready&&STEPS.every(([k])=>(info.steps||[]).some(s=>s.key===k&&s.status!=='busy'));
+  if(ready&&(Date.now()-splashStart>2600||NO_SPLASH)){hideSplash();return;}
+  setTimeout(splashLoop,ready?150:250);
+}
+function hideSplash(){if(splashDone)return;splashDone=true;$('splash').classList.add('weg');start();}
+$('splash').onclick=()=>{if(info&&info.ready&&Date.now()-splashStart>1200)hideSplash();};
+
+// ---------------- Fahren ----------------
+const localEdit=[];const pending={},sendTimer={};let chState=[];
+function liveOn(){return state&&state.mode==='live'&&state.live;}
+// Was die Fahrseite zeigt: eigene Hubs oder (Live-Link) die des ESP
+function driveModel(){
+  if(liveOn())return {n:4,hubs:state.live.hubs.filter(h=>h.enabled),input:state.live.input};
+  return {n:saved.throttles,hubs:saved.hubs.filter(h=>h.enabled),input:'web'};
+}
+function usedBy(m,ch){
+  return m.hubs.map(h=>{const ps=h.routes.map((r,p)=>r.source===ch+1?drv(h.type).ports[p]:null).filter(Boolean);
+    return ps.length?{h,ps}:null;}).filter(Boolean);
+}
+let driveSig='';
+function renderDrive(){
+  const m=driveModel();
+  const used=[...Array(m.n).keys()].filter(i=>usedBy(m,i).length);
+  driveSig=JSON.stringify([m.n,m.input,lang,m.hubs.map(h=>[h.id,h.name,h.image,h.routes])]);
+  while(chState.length<m.n)chState.push({speed:0,reversed:false});
+  $('driveHint').hidden=used.length>0;
+  $('drive').innerHTML=used.map(i=>`<div>
+    <div class="bahn" id="df${i}"><div class="fuell" id="dfill${i}"></div><div class="griff" id="dk${i}"></div><div class="wert" id="dp${i}">0</div>
+      <div class="lok">${usedBy(m,i).map(({h,ps})=>`<div>${h.image?`<img src="${imgUrl(h.image)}" alt="">`:''}${esc(h.name)} <i>${ps.join('+')}</i></div>`).join('')}</div>
+      <div class="nr">${T('Regler')} ${i+1}</div></div>
+    <button class="dir vor" id="dd${i}">${T('VOR')}</button>
+  </div>`).join('');
+  used.forEach(i=>{
+    const f=$('df'+i);let startY=0,startV=0;
+    // Relativ ziehen: Antippen allein ändert die Geschwindigkeit nicht
+    f.addEventListener('pointerdown',e=>{if(m.input==='hw')return;f.setPointerCapture(e.pointerId);startY=e.clientY;startV=chState[i].speed;});
+    f.addEventListener('pointermove',e=>{if(!f.hasPointerCapture(e.pointerId))return;
+      const v=Math.max(0,Math.min(100,Math.round(startV+(startY-e.clientY)/f.clientHeight*100)));
+      if(v!==chState[i].speed)setLocal(i,{speed:v});});
+    $('dd'+i).addEventListener('click',()=>setLocal(i,{reversed:!chState[i].reversed}));
+    showChannel(i,true);
+    if(m.input==='hw'){f.classList.add('aus');$('dd'+i).disabled=true;}
+  });
+  $('driveInfo').innerHTML=esc(T(m.input==='hw'?'Gesteuert wird mit den Potis und Schaltern am ESP.':'Zum Fahren den Hebel hoch- oder runterziehen.'))+` · <kbd>␣</kbd> ${T('Leertaste = Not-Stopp')}`;
+}
+function showChannel(i,withValue){
+  const c=chState[i];if(!c)return;
+  const led=$('cl'+i),d=$('dd'+i);
+  if(led)led.classList.toggle('on',c.reversed);
+  if(d){d.classList.toggle('vor',!c.reversed);d.textContent=T(c.reversed?'ZURÜCK':'VOR');}
+  if(!withValue)return;
+  if($('cs'+i)){$('cs'+i).value=c.speed;$('cp'+i).textContent=c.speed+' %';$('cr'+i).checked=c.reversed;}
+  if($('df'+i)){$('dk'+i).style.bottom=`max(4px, calc(${c.speed}% - 6px))`;$('dp'+i).textContent=c.speed;}
+}
+function setLocal(i,v){Object.assign(chState[i],v);showChannel(i,true);sendInput(i,v);}
+// Höchstens alle 80 ms senden, der letzte Wert geht immer raus
+function sendInput(i,v){
+  localEdit[i]=Date.now();
+  pending[i]=Object.assign(pending[i]||{},v);
+  if(sendTimer[i])return;
+  const flush=()=>{const body=pending[i];delete pending[i];
+    if(!body){sendTimer[i]=null;return;}
+    api('/api/input',Object.assign({ch:i},body)).catch(()=>{});
+    sendTimer[i]=setTimeout(flush,80);};
+  flush();
+}
+const estop=()=>{chState.forEach((c,i)=>{localEdit[i]=0;delete pending[i];c.speed=0;showChannel(i,true);});api('/api/estop',{}).catch(()=>{});};
+$('estopBtn').onclick=estop;$('estopTop').onclick=estop;
+document.addEventListener('keydown',e=>{
+  if((e.key===' '||e.key==='Escape')&&!/INPUT|SELECT|TEXTAREA|BUTTON/.test(document.activeElement.tagName)&&!$('about').open){e.preventDefault();estop();}
+});
+
+// ---------------- Einstellungen: Fahrregler ----------------
+function renderCtrls(){
+  const n=config.throttles;
+  $('thCount').innerHTML=[...Array(16).keys()].map(k=>`<option ${k+1===n?'selected':''}>${k+1}</option>`).join('');
+  $('ctrls').innerHTML=[...Array(n).keys()].map(i=>`<div class="ctrl">
+    <div class="top"><b>${T('Regler')} ${i+1}</b><span class="pct" id="cp${i}">0 %</span></div>
+    <input type="range" min="0" max="100" value="0" id="cs${i}">
+    <div class="top"><label><input type="checkbox" id="cr${i}"> ${T('Richtung umkehren')}</label>
+      <span style="flex:1"></span><span class="led" id="cl${i}" title="${T('Richtungs-LED')}"></span></div>
+  </div>`).join('');
+  while(chState.length<n)chState.push({speed:0,reversed:false});
+  for(let i=0;i<n;i++){
+    $('cs'+i).addEventListener('input',e=>setLocal(i,{speed:+e.target.value}));
+    $('cr'+i).addEventListener('change',e=>setLocal(i,{reversed:e.target.checked}));
+    showChannel(i,true);
+  }
+  $('revSec').value=config.reverseMs/1000;
+}
+$('thCount').onchange=e=>{config.throttles=+e.target.value;
+  config.hubs.forEach(h=>h.routes.forEach(r=>{if(r.source>config.throttles)r.source=0;}));
+  dirty$(true);renderCtrls();renderHubs();};
+$('revSec').onchange=e=>{config.reverseMs=Math.round(Math.max(0,Math.min(20,+e.target.value))*1000);dirty$(true);};
+
+// ---------------- Einstellungen: Hubs ----------------
+function hubCard(h,i){
+  const d=drv(h.type),n=config.throttles;
+  return `<div class="hub${h.enabled?'':' abgestellt'}" data-card="${i}">
+    <div class="bild" data-img="${i}" title="${T('Bild hinzufügen')}">${h.image?`<img src="${imgUrl(h.image)}" alt=""><button class="klein weg" data-imgdel="${i}" title="${T('Bild entfernen')}">✕</button>`
+      :`<svg class="i"><use href="#i-bild"/></svg>${T('Bild hinzufügen')}`}</div>
+    <div class="row"><input type="text" data-h="${i}" data-f="name" value="${esc(h.name)}" placeholder="${T('Name')}" maxlength="40">
+      <span class="badge" id="hs${h.id}">–</span></div>
+    <div class="row"><select data-h="${i}" data-f="type">${info.drivers.map(o=>`<option value="${o.id}" ${o.id===h.type?'selected':''}>${o.id==='jmc'?T('JMC (BLE-Verbindung)'):esc(o.name)}</option>`).join('')}</select>
+      <label><input type="checkbox" data-h="${i}" data-f="enabled" ${h.enabled?'checked':''}> ${T('aktiv')}</label></div>
+    ${d.kind==='advert'?`<div class="row"><select data-h="${i}" data-f="slot">${[...Array(d.slots).keys()].map(s=>`<option value="${s}" ${h.slot==s?'selected':''}>Slot ${s} (${s+1}× ${T('Blinken')})</option>`).join('')}</select>
+      <button class="klein" data-pair="${h.type}">${T('Einlernen')}</button></div>
+      <div class="mute">${T('Hub einschalten, dann „Einlernen“. Slot mit der Taste am Hub wählen (nach dem Einschalten Slot 0).')}</div>`
+    :`<div class="row"><input type="text" data-h="${i}" data-f="mac" value="${esc(h.mac)}" placeholder="aa:bb:cc:dd:ee:ff" spellcheck="false"></div>`}
+    <table>${h.routes.map((r,p)=>`<tr><td class="port">${d.ports[p]}</td>
+      <td><select data-h="${i}" data-p="${p}" data-f="source">${[...Array(n+1).keys()].map(s=>`<option value="${s}" ${r.source==s?'selected':''}>${s?T('Regler')+' '+s:'–'}</option>`).join('')}</select></td>
+      <td><label><input type="checkbox" data-h="${i}" data-p="${p}" data-f="invert" ${r.invert?'checked':''}> ${T('umpolen')}</label></td>
+      <td class="val" id="pv${h.id}_${p}">${bar(0)}</td></tr>`).join('')}</table>
+    <div class="conflict" id="hc${i}"></div><div class="fehler" id="he${h.id}"></div>
+    <div class="row"><span style="flex:1"></span><button class="klein" data-del="${i}">${T('Löschen')}</button></div>
+  </div>`;
+}
+function renderHubs(){
+  const on=[],off=[];
+  config.hubs.forEach((h,i)=>(h.enabled?on:off).push(hubCard(h,i)));
+  $('hubsOn').innerHTML=on.join('');$('hubsOff').innerHTML=off.join('');
+  $('noneOn').hidden=on.length>0;$('depotN').textContent=`(${off.length})`;
+  document.querySelectorAll('.hubs [data-f]').forEach(el=>el.addEventListener(el.type==='text'?'input':'change',onEdit));
+  document.querySelectorAll('.hubs [data-pair]').forEach(el=>el.onclick=()=>api('/api/mkpair',{type:el.dataset.pair}).catch(()=>{}));
+  document.querySelectorAll('.hubs [data-del]').forEach(el=>el.onclick=()=>{
+    if(!confirm(T('Hub löschen? Bild und Einstellungen gehen verloren.')))return;
+    config.hubs.splice(+el.dataset.del,1);dirty$(true);renderHubs();});
+  document.querySelectorAll('.hubs [data-img]').forEach(el=>{
+    const i=+el.dataset.img;
+    el.onclick=e=>{if(e.target.closest('[data-imgdel]'))return;pickImage(i);};
+    el.ondragover=e=>{e.preventDefault();el.classList.add('drop');};
+    el.ondragleave=()=>el.classList.remove('drop');
+    el.ondrop=e=>{e.preventDefault();el.classList.remove('drop');const f=e.dataTransfer.files[0];if(f)uploadImage(i,f);};
+  });
+  document.querySelectorAll('.hubs [data-imgdel]').forEach(el=>el.onclick=async e=>{
+    e.stopPropagation();const h=config.hubs[+el.dataset.imgdel];
+    try{if(dirty)await save();const r=await api('/api/image/'+h.id,undefined,'DELETE');await reloadConfig(r);}catch(err){msg(T('Fehler: ')+err.message,true);}
+  });
+  updateConflicts();renderPushList();
+}
+let imgTarget=-1;
+function pickImage(i){imgTarget=i;$('fileIn').value='';$('fileIn').click();}
+$('fileIn').onchange=e=>{const f=e.target.files[0];if(f&&imgTarget>=0)uploadImage(imgTarget,f);};
+async function uploadImage(i,file){
+  if(file.size>8*1024*1024){msg(T('Bild zu groß (max. 8 MB)'),true);return;}
+  try{
+    if(dirty)await save();  // Hub muss gespeichert sein, sonst kennt der Server die id nicht
+    const h=config.hubs[i];
+    await api('/api/image/'+h.id,file);await reloadConfig();
+  }catch(err){msg(T('Fehler: ')+err.message,true);}
+}
+function onEdit(e){
+  const el=e.target,h=config.hubs[+el.dataset.h],f=el.dataset.f;
+  if(el.dataset.p!==undefined){const r=h.routes[+el.dataset.p];if(f==='source')r.source=+el.value;else r.invert=el.checked;}
+  else if(f==='enabled')h.enabled=el.checked;else if(f==='slot')h.slot=+el.value;
+  else if(f==='type'){h.type=el.value;const n=drv(h.type).ports.length;h.routes=h.routes.slice(0,n);while(h.routes.length<n)h.routes.push({source:0,invert:false});}
+  else h[f]=el.value.trim();
+  dirty$(true);
+  if(f==='type'||f==='enabled')renderHubs();else updateConflicts();
+}
+function updateConflicts(){
+  config.hubs.forEach((h,i)=>{
+    const d=drv(h.type),w=[];
+    (d.sharedSpeed||[]).forEach(g=>{const ss=new Set(g.map(p=>h.routes[d.ports.indexOf(p)].source).filter(Boolean));
+      if(ss.size>1)w.push(`${g.join('/')} ${T('hängen an verschiedenen Reglern – es gilt der größere Speed.')}`);});
+    const c=$('hc'+i);if(c)c.innerHTML=w.length?esc(w.join(' '))+` <a href="#" data-help="guide#hubs">${T('Mehr dazu')}</a>`:'';
+  });
+}
+$('addBtn').onclick=()=>{
+  const n=config.hubs.filter(h=>h.enabled).length+1;
+  config.hubs.push({id:newId(),name:`${T('Neuer Hub')} ${n}`,type:'jmc',mac:'',slot:0,enabled:true,image:'',note:'',routes:drv('jmc').ports.map(()=>({source:0,invert:false}))});
+  dirty$(true);renderHubs();
+};
+function newId(){return [...crypto.getRandomValues(new Uint8Array(4))].map(b=>b.toString(16).padStart(2,'0')).join('');}
+
+function msg(text,err){$('msg').textContent=text;$('msg').style.color=err?'#F08A8A':'#5FD08E';}
+async function save(){
+  try{
+    const r=await api('/api/config',{throttles:config.throttles,reverseMs:config.reverseMs,hubs:config.hubs,esp:{host:$('espHost').value||'StudRailMasterQuadro.local'}});
+    await reloadConfig(r);msg(T('Gespeichert ✓'));
+  }catch(e){msg(T('Fehler: ')+e.message,true);throw e;}
+}
+async function reloadConfig(c){
+  config=c&&c.hubs?c:await api('/api/config');saved=clone(config);dirty$(false);renderAll();
+}
+$('saveBtn').onclick=()=>save().catch(()=>{});
+$('undoBtn').onclick=()=>{config=clone(saved);dirty$(false);renderAll();};
+window.onbeforeunload=()=>dirty?'':undefined;
+
+// ---------------- Scan ----------------
+$('scanBtn').onclick=async()=>{
+  try{await api('/api/scan',{});}catch(e){$('scanInfo').textContent=T('Fehler: ')+e.message;return;}
+  $('scanInfo').textContent=T('suche …');$('scanList').innerHTML='';$('scanBtn').disabled=true;
+  const t=setInterval(async()=>{
+    const r=await api('/api/scan').catch(()=>null);if(!r||r.running)return;clearInterval(t);$('scanBtn').disabled=false;
+    if(r.error){$('scanInfo').textContent=T('Fehler: ')+r.error;return;}
+    $('scanInfo').textContent=`${r.devices.length} ${T('Geräte mit Namen gefunden')}`;
+    r.devices.sort((a,b)=>(!!b.type-!!a.type)||b.rssi-a.rssi);
+    const gatt=config.hubs.map((h,i)=>({h,i})).filter(x=>drv(x.h.type).kind==='gatt');
+    $('scanList').innerHTML=r.devices.map(d=>`<li><code>${esc(d.mac)}</code> <b>${esc(d.name)}</b> <span class="mute">${d.rssi} dBm${d.type?' · '+esc(drv(d.type).name):''}</span>
+      ${d.known?`<span class="badge ok">${T('schon eingetragen')}</span>`:`<select><option value="-1">→ ${T('Neuer Hub')}</option>${gatt.map(x=>`<option value="${x.i}">→ ${esc(x.h.name)}</option>`).join('')}</select>
+      <button class="klein" data-mac="${esc(d.mac)}" data-name="${esc(d.name)}" data-type="${esc(d.type||'jmc')}">${T('übernehmen')}</button>`}</li>`).join('');
+    $('scanList').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
+      const i=+btn.previousElementSibling.value;
+      if(i<0)config.hubs.push({id:newId(),name:btn.dataset.name,type:btn.dataset.type,mac:btn.dataset.mac,slot:0,enabled:true,image:'',note:'',routes:drv(btn.dataset.type).ports.map(()=>({source:0,invert:false}))});
+      else Object.assign(config.hubs[i],{mac:btn.dataset.mac,enabled:true});
+      dirty$(true);renderHubs();btn.disabled=true;$('scanInfo').textContent=T('Übernommen – Speichern nicht vergessen');
+    });
+  },700);
+};
+
+// ---------------- ESP ----------------
+function espBody(extra){return Object.assign({host:$('espHost').value.trim()||'StudRailMasterQuadro.local'},extra||{});}
+$('espFetch').onclick=async()=>{
+  $('espFetchMsg').textContent=T('verbinde …');$('espList').innerHTML='';
+  try{
+    const r=await api('/api/esp/fetch',espBody());
+    $('espFetchMsg').textContent=r.hubs.length?`${r.hubs.length} Hubs ${T('auf dem ESP')}`:T('Keine Hubs auf dem ESP.');
+    $('espList').innerHTML=r.hubs.map((h,k)=>`<li><b>${esc(h.name)}</b><span class="mute">${esc(drv(h.type).name)} · ${esc(h.mac||'Slot '+h.slot)} · ${T(h.esp.where==='archive'?'im Archiv':'am ESP aktiv')}</span>
+      <span style="flex:1"></span><button class="klein" data-k="${k}">${T('übernehmen')}</button></li>`).join('');
+    $('espList').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      const h=r.hubs[+b.dataset.k];delete h.esp;
+      h.routes.forEach(x=>{if(x.source>config.throttles)x.source=0;});
+      config.hubs.push(h);dirty$(true);renderHubs();b.disabled=true;
+    });
+  }catch(e){$('espFetchMsg').textContent=T('Fehler: ')+e.message;}
+};
+function renderPushList(){
+  const ok=config.hubs.filter(h=>(drv(h.type).runsOn||[]).includes('esp32')&&(h.mac||drv(h.type).kind==='advert'));
+  $('espPushList').innerHTML=ok.length?ok.map(h=>`<li><label><input type="checkbox" value="${h.id}"> ${h.image?`<img src="${imgUrl(h.image)}" alt="">`:''} <b>${esc(h.name)}</b></label>
+    <span class="mute">${esc(drv(h.type).name)}</span></li>`).join(''):`<li class="mute">${T('Keine passenden Hubs.')}</li>`;
+}
+$('espPush').onclick=async()=>{
+  const ids=[...$('espPushList').querySelectorAll('input:checked')].map(x=>x.value);if(!ids.length)return;
+  $('espPushMsg').textContent=T('verbinde …');
+  try{
+    if(dirty)await save();
+    const r=await api('/api/esp/push',espBody({ids}));
+    const f=(k,l)=>r[k].length?`${T(l)}: ${r[k].map(x=>esc(x.name)+(x.reason?` (${esc(x.reason)})`:'')+(x.warning?` (${esc(x.warning)})`:'')).join(', ')}`:'';
+    $('espPushMsg').innerHTML=[f('added','neu'),f('updated','aktualisiert'),f('skipped','übersprungen')].filter(Boolean).join(' · ');
+  }catch(e){$('espPushMsg').textContent=T('Fehler: ')+e.message;}
+};
+$('liveBtn').onclick=async()=>{
+  const on=liveOn();$('liveMsg').textContent=on?'':T('verbinde …');
+  try{await api('/api/esp/live',on?{stop:true}:espBody());$('liveMsg').textContent='';}
+  catch(e){$('liveMsg').textContent=T('Fehler: ')+e.message;}
+};
+
+// ---------------- Über ----------------
+$('aboutBtn').onclick=()=>{
+  const r=state&&state.radio||{},adv=Object.values(r.advert||{})[0];
+  const ble=info.demo?T('Demo (simuliert)'):r.ble===true?`<span class="ok-t">${T('bereit')}</span>`:r.ble===false?`<span class="warn-t">${T('nicht verfügbar')}</span> ${esc(r.bleError)}`:T('wird geprüft');
+  const mk=info.demo?T('Demo (simuliert)'):!adv?T('nicht benutzt'):adv.ok?`<span class="ok-t">${T('bereit')}</span>`:`<span class="warn-t">${T('nicht verfügbar')}</span> ${esc(adv.reason)}`;
+  $('aboutKv').innerHTML=`<dt>${T('Version')}</dt><dd>${esc(info.version)}</dd><dt>${T('System')}</dt><dd>${esc(info.platform)} · Python ${esc(info.python)}</dd>
+    <dt>${T('Bluetooth')}</dt><dd>${ble}</dd><dt>${T('Mould-King-Sender')}</dt><dd>${mk}</dd>
+    <dt>${T('Datenordner')}</dt><dd><code>${esc(info.dataDir)}</code></dd><dt>${T('Lizenz')}</dt><dd>GPL-3.0-or-later</dd>`;
+  $('about').showModal();
+};
+$('aboutClose').onclick=()=>$('about').close();
+
+// ---------------- Hilfe ----------------
+// topic: guide, install, sync; anchor ohne '#'
+function openHelp(topic,anchor){
+  $('helpFrame').src=`/help/${lang}/${topic||'guide'}${anchor?'#'+anchor:''}`;
+  if(!$('help').open)$('help').showModal();
+}
+// passender Abschnitt der Anleitung zur gerade offenen Ansicht
+$('helpBtn').onclick=()=>openHelp('guide',location.hash==='#einstellungen'?(lang==='en'?'settings':'einstellungen'):(lang==='en'?'driving':'fahren'));
+$('helpClose').onclick=()=>$('help').close();
+$('aboutHelp').onclick=()=>{$('about').close();openHelp('guide');};
+// Linux: Mould King freischalten – das System fragt im eigenen Fenster nach dem Passwort
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-unlock]');if(!b)return;
+  b.disabled=true;b.textContent=T('Passwort-Fenster …');
+  try{await api('/api/mkunlock',{});msg(T('Mould King ist freigeschaltet ✓'));}
+  catch(err){msg(T('Fehler: ')+err.message,true);b.disabled=false;b.textContent=T('Mould King freischalten');}
+});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-help]');if(a){e.preventDefault();const [t,h]=a.dataset.help.split('#');openHelp(t,h);}});
+
+// ---------------- Ansicht + Abfrage ----------------
+function route(){
+  const setup=location.hash==='#einstellungen';
+  $('driveView').hidden=setup;$('setupView').hidden=!setup;$('estopTop').hidden=!setup;
+  $('navBtn').innerHTML=`<svg class="i"><use href="#i-${setup?'lok':'einstellungen'}"/></svg>`;
+  $('navBtn').title=T(setup?'Fahren':'Einstellungen');
+  $('kopfOrt').textContent=T('Fahren');
+}
+$('navBtn').onclick=()=>{location.hash=location.hash==='#einstellungen'?'':'#einstellungen';};
+window.addEventListener('hashchange',route);
+$('langBtn').onclick=()=>setLang(lang==='en'?'de':'en');
+
+function renderAll(){if(!config)return;renderCtrls();renderHubs();renderDrive();$('espHost').value=config.esp.host;}
+
+async function poll(){
+  try{
+    state=await api('/api/state');
+    const live=liveOn();
+    const ch=live?state.live.channels:state.channels;
+    if(saved&&JSON.stringify([driveModel().n,driveModel().input,lang,driveModel().hubs.map(h=>[h.id,h.name,h.image,h.routes])])!==driveSig)renderDrive();
+    $('banner').hidden=!(live?state.live.estop:state.estop);
+    $('modus').textContent=live?`LIVE · ${state.live.host}`:info.demo?'DEMO':'PC';
+    $('liveBanner').hidden=!live;$('liveSetup').hidden=!live;
+    if(live)$('liveText').innerHTML=`<b>${T('Live-Link zu')} ${esc(state.live.host)}</b>${state.live.ok?'':esc(T('ESP antwortet nicht'))+(state.live.error?': '+esc(state.live.error):'')}`;
+    $('liveBtn').textContent=T(live?'Live-Link beenden':'Live-Link starten');
+    const noBle=!info.demo&&!live&&state.radio.ble===false;
+    $('bleBanner').hidden=!noBle&&!info.demo;
+    $('bleText').innerHTML=info.demo?esc(T('Demo-Modus: Hubs werden nur simuliert.')):`<b>${T('Kein Bluetooth')}</b>${esc(state.radio.bleError||'')}`;
+    $('bleBanner').classList.toggle('info',true);
+    ch.forEach((c,i)=>{
+      if(!chState[i])chState[i]={speed:0,reversed:false};
+      // eigene Eingabe der letzten 600 ms nicht vom Server überschreiben lassen
+      if(Date.now()-(localEdit[i]||0)<600){showChannel(i,false);return;}
+      chState[i]={speed:c.speed,reversed:c.reversed};showChannel(i,true);
+    });
+    // Füllung = tatsächliche Geschwindigkeit; blinkt die Richtung, läuft gerade ein Wechsel
+    ch.forEach((c,i)=>{if(!$('df'+i))return;
+      $('dfill'+i).style.height=Math.abs(c.value)+'%';
+      $('dd'+i).classList.toggle('wechsel',c.value!==0&&(c.value<0)!==chState[i].reversed);});
+    const m=driveModel();
+    const hs=live?Object.fromEntries(state.live.hubs.map(h=>[h.id,h])):state.hubs;
+    const on=m.hubs.map(h=>({h,s:hs[h.id]||{}})),ready=on.filter(x=>x.s.ready).length;
+    const c=$('hubCount');c.className='st '+(ready===on.length?'ok':'warn');
+    c.textContent=ready===on.length?`${on.length} ${on.length===1?'Hub':'Hubs'}`:`${ready}/${on.length} Hubs`;
+    $('hubDetail').textContent=on.filter(x=>!x.s.ready).map(x=>`${x.h.name}: ${TS(x.s.state||'off')}`).join(' · ');
+    if(!live)Object.entries(state.hubs).forEach(([id,h])=>{
+      const b=$('hs'+id);if(!b)return;
+      b.textContent=TS(h.state)+(h.ready&&h.rssi?` ${h.rssi} dBm`:'');b.className='badge'+(h.ready?' ok':h.state==='off'?'':' warn');
+      const e=$('he'+id);if(!e)return;
+      const hc=config.hubs.find(x=>x.id===id),av=hc&&(state.radio.advert||{})[hc.type];
+      const html=h.ready||!h.error?'':(av&&av.unlock?esc(h.error)+` <button class="klein primaer" data-unlock>${T('Mould King freischalten')}</button>`:esc(h.error)+` <a href="#" data-help="${/CAP_NET_RAW|Werbung|advertis/i.test(h.error)?'install#linux-mould-king':'guide#'+(lang==='en'?'troubleshooting':'fehlersuche')}">${T('Mehr dazu')}</a>`);
+      // nur bei Änderung neu schreiben, sonst geht ein Klick auf den Knopf verloren
+      if(e.dataset.html!==html){e.dataset.html=html;e.innerHTML=html;}
+      h.ports.forEach((v,p)=>{const x=$(`pv${id}_${p}`);if(x)x.innerHTML=bar(v);});
+    });
+    $('net').textContent=live?'':(info.demo?'Demo':'')+(state.radio.ble===false&&!info.demo?T('Kein Bluetooth'):'');
+  }catch(e){$('net').textContent='–';}
+}
+
+async function start(){
+  applyLang();route();
+  config=await api('/api/config');saved=clone(config);
+  renderAll();poll();setInterval(poll,300);
+}
+applyLang();renderSteps();splashLoop();
+</script>
+</body>
+</html>

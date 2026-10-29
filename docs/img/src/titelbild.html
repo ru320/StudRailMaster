@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- Titelbild für README, GitHub-Vorschau und YouTube-Thumbnail.
+     Bauen mit: python3 tools/gen_titelbild.py  (setzt Schriften/Bilder ein, fotografiert mit Firefox)
+     Parameter: ?lang=de|en  ?h=720|640 -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Stud Rail Master – Titelbild</title>
+<style>
+@font-face{font-family:'Barlow';font-weight:400;src:url(FONT_Barlow-Regular)}
+@font-face{font-family:'Barlow';font-weight:600;src:url(FONT_Barlow-SemiBold)}
+@font-face{font-family:'Barlow Condensed';font-weight:600;src:url(FONT_BarlowCondensed-SemiBold)}
+@font-face{font-family:'Barlow Condensed';font-weight:700;src:url(FONT_BarlowCondensed-Bold)}
+@font-face{font-family:'Barlow Condensed';font-weight:800;src:url(FONT_BarlowCondensed-ExtraBold)}
+:root{--orange:#FF9900;--orange-hell:#FFC266;--orange-tief:#E08600;--anthrazit:#383E42;--tief:#24282B;--mittel:#5A6268;
+--text:#E6E8EA;--text-2:#9AA1A7;--linie:#ffffff1f;--gruen:#2F9E5B;--rot:#D64545;
+--kopf:'Barlow Condensed','Arial Narrow',sans-serif;--fliess:'Barlow',system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:1280px;height:var(--h,720px);overflow:hidden}
+body{background:radial-gradient(90% 110% at 30% 15%,#3A4045 0%,#24282B 55%,#1B1E20 100%);color:var(--text);font:16px/1.4 var(--fliess);position:relative}
+/* links: Marke wie im Ladebildschirm */
+.links{position:absolute;left:72px;top:0;bottom:150px;width:560px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.logo{width:128px;height:128px;filter:drop-shadow(0 12px 26px #0009)}
+h1{margin:0;font:800 96px/.92 var(--kopf);letter-spacing:2px}
+h1 span{color:var(--orange);display:block}
+.claim{margin:0;white-space:pre-line;font:600 30px/1.2 var(--kopf);letter-spacing:.5px;color:var(--text)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chips b{font:700 17px/1 var(--kopf);letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border-radius:8px;border:2px solid var(--mittel);color:var(--text-2)}
+.chips b.o{border-color:var(--orange);color:var(--orange)}
+/* unten: Gleis mit Zug */
+.strecke{position:absolute;left:0;right:0;bottom:34px;height:110px;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.schwellen{position:absolute;left:0;right:0;bottom:6px;height:14px;background:repeating-linear-gradient(90deg,#5A6268 0 7px,transparent 7px 24px)}
+.schienen{position:absolute;left:0;right:0;bottom:13px;height:4px;background:#C9CED2}
+.zug{position:absolute;left:80px;bottom:15px;width:420px}
+/* rechts: Fernbedienungs-Ansicht (Fahren) */
+.karte{position:absolute;right:70px;top:calc((var(--h,720px) - 490px)/2 - 30px);width:500px;padding:22px;border-radius:26px;background:#2C3134;border:1px solid var(--linie);box-shadow:0 30px 70px #000a,0 0 0 8px #1B1E20,0 0 0 9px #ffffff14;transform:rotate(1.5deg)}
+.kopf{display:flex;justify-content:space-between;font:700 15px/1 var(--kopf);letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:16px}
+.kopf i{font-style:normal;color:var(--gruen)}
+.kopf i::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--gruen);margin-right:7px;vertical-align:1px}
+.regler{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.r{display:grid;gap:8px;justify-items:center;text-align:center}
+.hebel{position:relative;width:100%;height:230px;border-radius:14px;background:#24282B;border:1px solid var(--linie);overflow:hidden}
+.hebel .wert{position:absolute;top:10px;left:0;right:0;font:800 28px/1 var(--kopf);z-index:2}
+.hebel .fuell{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,var(--orange-hell),var(--orange) 60%,var(--orange-tief))}
+.hebel .griff{position:absolute;left:8%;right:8%;height:11px;border-radius:6px;background:#fff;box-shadow:0 2px 6px #0008;z-index:2}
+.name{font:700 16px/1.15 var(--kopf);letter-spacing:.5px}
+.name small{display:block;font:600 14px var(--kopf);color:var(--text-2)}
+.ri{font:800 13px/1 var(--kopf);letter-spacing:1.5px;padding:6px 10px;border-radius:6px;background:var(--orange);color:var(--tief)}
+.ri.z{background:#3A4045;color:var(--text-2)}
+.stopp{margin-top:18px;display:flex;gap:12px;align-items:center;justify-content:center;height:64px;border-radius:14px;background:var(--rot);color:#fff;font:800 26px/1 var(--kopf);letter-spacing:2px}
+.stopp svg{width:28px;height:28px}
+.flach .links{bottom:120px;gap:16px}.flach .logo{width:96px;height:96px}.flach h1{font-size:84px}
+.motto{position:absolute;right:74px;bottom:14px;font:italic 600 18px var(--fliess);color:var(--orange-hell)}
+</style>
+</head>
+<body>
+<div class="links">
+<svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+<rect width="64" height="64" rx="14" fill="#383E42"/>
+<g fill="#5A6268"><rect x="8" y="25" width="3" height="14" rx="1"/><rect x="17" y="25" width="3" height="14" rx="1"/><rect x="26" y="25" width="3" height="14" rx="1"/><rect x="35" y="25" width="3" height="14" rx="1"/><rect x="44" y="25" width="3" height="14" rx="1"/><rect x="53" y="25" width="3" height="14" rx="1"/></g>
+<path d="M4 28.5h56M4 35.5h56" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<g fill="#F90"><circle cx="20" cy="14" r="8"/><circle cx="44" cy="14" r="8"/><circle cx="20" cy="50" r="8"/><circle cx="44" cy="50" r="8"/></g>
+<g fill="none" stroke="#FFC266" stroke-width="1.5"><circle cx="20" cy="14" r="5"/><circle cx="44" cy="14" r="5"/><circle cx="20" cy="50" r="5"/><circle cx="44" cy="50" r="5"/></g>
+</svg>
+<h1>STUD RAIL <span>MASTER</span></h1>
+<p class="claim" data-de="Klemmbaustein-Züge fahren –&#10;per Bluetooth, mit echten Hebeln." data-en="Drive brick-built trains –&#10;via Bluetooth, with real levers.">Klemmbaustein-Züge fahren –&#10;per Bluetooth, mit echten Hebeln.</p>
+<div class="chips"><b class="o">PC</b><b class="o">ESP32</b><b>JMC</b><b>Mould King 4.0</b><b>LEGO City Hub</b></div>
+</div>
+
+<div class="karte" aria-hidden="true">
+<div class="kopf"><span data-de="StudRailMasterQuadro.local · Fahren" data-en="StudRailMasterQuadro.local · Drive">StudRailMasterQuadro.local · Fahren</span><i>2 Hubs</i></div>
+<div class="regler" id="regler"></div>
+<div class="stopp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.3 2h7.4L22 8.3v7.4L15.7 22H8.3L2 15.7V8.3z"/><path d="M7.5 12h9"/></svg><span data-de="NOT-STOPP" data-en="EMERGENCY STOP">NOT-STOPP</span></div>
+</div>
+
+<div class="strecke" aria-hidden="true">
+<div class="schwellen"></div><div class="schienen"></div>
+<!-- Zug aus Bausteinen wie im Ladebildschirm der PC-App -->
+<svg class="zug" viewBox="0 0 300 74">
+<g fill="#E6E8EA"><circle cx="262" cy="2" r="7" opacity=".25"/><circle cx="255" cy="9" r="5" opacity=".5"/><circle cx="250" cy="14" r="3.5" opacity=".8"/></g>
+<g><rect x="2" y="26" width="76" height="30" rx="4" fill="#5A6268"/><rect x="8" y="32" width="64" height="10" rx="2" fill="#383E42"/>
+<g fill="#7B848B"><rect x="9" y="21" width="10" height="5" rx="1.5"/><rect x="23" y="21" width="10" height="5" rx="1.5"/><rect x="37" y="21" width="10" height="5" rx="1.5"/><rect x="51" y="21" width="10" height="5" rx="1.5"/><rect x="65" y="21" width="10" height="5" rx="1.5"/></g></g>
+<g><rect x="84" y="26" width="76" height="30" rx="4" fill="#383E42" stroke="#5A6268"/><rect x="90" y="32" width="64" height="10" rx="2" fill="#FFC266" opacity=".8"/>
+<g fill="#5A6268"><rect x="91" y="21" width="10" height="5" rx="1.5"/><rect x="105" y="21" width="10" height="5" rx="1.5"/><rect x="119" y="21" width="10" height="5" rx="1.5"/><rect x="133" y="21" width="10" height="5" rx="1.5"/><rect x="147" y="21" width="10" height="5" rx="1.5"/></g></g>
+<g><rect x="166" y="30" width="94" height="26" rx="4" fill="#FF9900"/><rect x="166" y="12" width="34" height="44" rx="4" fill="#383E42"/><rect x="172" y="18" width="22" height="13" rx="2" fill="#FFC266"/>
+<rect x="244" y="18" width="10" height="13" rx="2" fill="#383E42"/><path d="M260 48h12l-4 8h-8z" fill="#5A6268"/><circle cx="258" cy="38" r="3.5" fill="#FFF3D6"/>
+<g fill="#FFC266"><rect x="206" y="25" width="10" height="5" rx="1.5"/><rect x="220" y="25" width="10" height="5" rx="1.5"/><rect x="234" y="25" width="10" height="5" rx="1.5"/></g>
+<g fill="#5A6268"><rect x="170" y="7" width="10" height="5" rx="1.5"/><rect x="186" y="7" width="10" height="5" rx="1.5"/></g></g>
+<g fill="#1E2124" stroke="#9AA1A7" stroke-width="2">
+<circle cx="18" cy="60" r="7"/><path d="M18 54v12M12 60h12"/><circle cx="62" cy="60" r="7"/><path d="M62 54v12M56 60h12"/>
+<circle cx="100" cy="60" r="7"/><path d="M100 54v12M94 60h12"/><circle cx="144" cy="60" r="7"/><path d="M144 54v12M138 60h12"/>
+<circle cx="186" cy="58" r="9"/><path d="M186 50v16M178 58h16"/><circle cx="212" cy="58" r="9"/><path d="M212 50v16M204 58h16"/><circle cx="238" cy="58" r="9"/><path d="M238 50v16M230 58h16"/></g>
+<path d="M78 46h6M160 46h6" stroke="#9AA1A7" stroke-width="3"/>
+</svg>
+</div>
+<div class="motto">In Herbrechtingen ist es immer am schönsten!</div>
+
+<script>
+const q=new URLSearchParams(location.search), lang=q.get('lang')==='en'?'en':'de';
+document.documentElement.lang=lang;
+const h=+(q.get('h')||720);document.body.style.setProperty('--h',h+'px');document.body.classList.toggle('flach',h<700);
+document.querySelectorAll('[data-'+lang+']').forEach(e=>e.textContent=e.dataset[lang]);
+const vor=lang==='en'?'FWD':'VOR', zur=lang==='en'?'REV':'ZURÜCK';
+const R=[[72,'Orient Exp.','A+B',1],[35,lang==='en'?'Freight':'Güterzug','C',0],[0,lang==='en'?'Switch':'Weiche','D',1],[0,'Hub 2','A',1]];
+document.getElementById('regler').innerHTML=R.map(([w,n,p,v])=>{
+  const y=Math.max(4,w)/100*(230-16);
+  return `<div class="r"><div class="hebel"><div class="wert">${w}</div>${w?`<div class="fuell" style="height:${y}px"></div>`:''}<div class="griff" style="bottom:${y-6}px"></div></div>
+  <div class="name">${n}<small>${p}</small></div><div class="ri${v?'':' z'}">${v?vor:zur}</div></div>`}).join('');
+</script>
+</body>
+</html>

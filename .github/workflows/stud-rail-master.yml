@@ -1,0 +1,89 @@
+# Baut Stud Rail Master für Windows, macOS und Linux und prüft die Treiber auf beiden Seiten.
+# Läuft erst im veröffentlichten Repo (dort liegt dieser Ordner im Wurzelverzeichnis).
+# Tag „v*“ (z. B. v0.9.0) → Release mit den fertigen Programmen.
+name: Stud Rail Master
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  firmware-tests:
+    name: ESP driver tests (native)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install platformio
+      - run: pio test -e native
+
+  build:
+    name: App ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: StudRailMaster-windows
+          - os: macos-14
+            artifact: StudRailMaster-macos
+          - os: ubuntu-22.04
+            artifact: StudRailMaster-linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install
+        run: pip install ".[window,dev]"
+      - name: Tests
+        run: python -m pytest -q
+      - name: Mould-King-Hilfsprogramm (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p studrailmaster/bin
+          cc -O2 -Wall -static -o studrailmaster/bin/srm-hci-helper packaging/linux/srm-hci-helper.c
+      - name: PyInstaller
+        run: pyinstaller --noconfirm packaging/studrailmaster.spec
+      - name: Pack (macOS)
+        if: runner.os == 'macOS'
+        run: cd dist && ditto -c -k --keepParent "Stud Rail Master.app" ../StudRailMaster-macos.zip
+      - name: Pack (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path dist/StudRailMaster.exe -DestinationPath StudRailMaster-windows.zip
+      - name: Pack (Linux, AppImage)
+        if: runner.os == 'Linux'
+        run: |
+          curl -fsSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          APPIMAGETOOL=./appimagetool packaging/linux/build_appimage.sh dist/StudRailMaster StudRailMaster-x86_64.AppImage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: app/StudRailMaster-*
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [firmware-tests, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: out, merge-multiple: true }
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          body: |
+            Stud Rail Master – offline, no account, no cloud.
+            *In Herbrechtingen ist es immer am schönsten!*

@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#24282B">
+<title>Stud Rail Master Quadro</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23383E42'/%3E%3Cpath d='M2 14h28M2 18h28' stroke='%23fff' stroke-width='2'/%3E%3Cg fill='%23F90'%3E%3Ccircle cx='10' cy='7' r='4.5'/%3E%3Ccircle cx='22' cy='7' r='4.5'/%3E%3Ccircle cx='10' cy='25' r='4.5'/%3E%3Ccircle cx='22' cy='25' r='4.5'/%3E%3C/g%3E%3C/svg%3E">
+<!-- Schriften nur, wenn das Handy Internet hat; blockiert die Seite nicht (AP-Modus: Ersatzschrift) -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@600;700;800&display=swap">
+<style>
+/* Farben und Schriften (Anthrazit/Orange, Barlow) */
+:root{--orange:#FF9900;--orange-hell:#FFC266;--orange-tief:#E08600;--anthrazit:#383E42;--tief:#24282B;--mittel:#5A6268;
+--text:#E6E8EA;--text-2:#9AA1A7;--linie:#ffffff1f;--flaeche:#ffffff0d;--gruen:#2F9E5B;--rot:#D64545;
+--kopf:'Barlow Condensed','Arial Narrow',sans-serif;--fliess:'Barlow',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tief);color:var(--text);font:16px/1.5 var(--fliess)}
+[hidden]{display:none!important}
+.i{width:22px;height:22px;flex:none}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--tief);border-bottom:1px solid var(--linie);position:sticky;top:0;z-index:2}
+.marke{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.marke svg{width:34px;height:34px;flex:none}
+.marke b{font:800 18px/1 var(--kopf);letter-spacing:.5px;display:block;white-space:nowrap}
+.marke span{font:700 11px/1 var(--kopf);letter-spacing:4px;color:var(--orange);display:block;margin-top:3px}
+button,.btn{font:700 15px var(--kopf);letter-spacing:1px;text-transform:uppercase;padding:9px 14px;border-radius:10px;border:2px solid var(--mittel);background:transparent;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+button:hover{border-color:var(--orange)}
+button.primaer{background:var(--orange);border-color:var(--orange);color:var(--tief)}
+button.primaer:hover{background:var(--orange-tief)}
+button.rot{background:var(--rot);border-color:var(--rot);color:#fff}
+.nur-icon{padding:7px}
+main{max-width:960px;margin:0 auto;padding:16px;display:grid;gap:16px}
+.mute{color:var(--text-2);font-size:14px}
+.hinweis{display:flex;gap:12px;padding:12px 14px;border-radius:10px;border-left:5px solid var(--rot);background:#D6454526;font-size:15px}
+.hinweis b{font:700 15px var(--kopf);letter-spacing:1px;text-transform:uppercase;display:block}
+.hinweis .i{color:var(--rot)}
+.hinweis.info{border-left-color:var(--orange);background:#FF99001f}.hinweis.info .i{color:var(--orange)}
+.hinweis .actions{margin-top:8px}
+
+/* Fahren */
+#driveView{max-width:560px}
+.kopf{display:flex;justify-content:space-between;align-items:center;font:600 14px var(--kopf);letter-spacing:1px;color:var(--text-2);text-transform:uppercase}
+.kopf .st{display:inline-flex;gap:6px;align-items:center}
+.kopf .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.kopf .ok{color:var(--gruen)}.kopf .warn{color:var(--orange)}
+.hebel{display:grid;gap:10px}
+.hebel>div{text-align:center;min-width:0}
+.bahn{height:clamp(220px,52vh,480px);border-radius:14px;background:var(--flaeche);position:relative;overflow:hidden;border:1px solid var(--linie);touch-action:none;cursor:ns-resize;user-select:none}
+.bahn .fuell{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(var(--orange-hell),var(--orange))}
+.bahn .griff{position:absolute;left:8px;right:8px;height:12px;border-radius:6px;background:#fff;box-shadow:0 2px 6px #0008}
+.bahn .wert{position:absolute;top:8px;left:0;right:0;font:700 30px var(--kopf);text-shadow:0 1px 3px #0008;pointer-events:none}
+/* Welche Lok am Regler hängt: im Hebel, auf dunklem Schild, damit es auch über Orange lesbar bleibt */
+.bahn .lok{position:absolute;top:50px;left:6px;right:6px;padding:6px 4px;border-radius:8px;background:#24282Bd9;font:700 clamp(15px,4.6vw,21px)/1.2 var(--kopf);letter-spacing:.5px;color:#fff;overflow-wrap:anywhere;pointer-events:none}
+.bahn .lok i{font-style:normal;color:var(--orange)}
+.bahn.aus{opacity:.55;cursor:default}
+.dir{margin-top:10px;width:100%;min-height:56px;justify-content:center;border-radius:12px;border:0;font:800 clamp(17px,5vw,24px) var(--kopf);letter-spacing:1px;background:#ffffff14;color:var(--text-2)}
+.dir.vor{background:var(--orange);color:var(--tief)}
+.dir:disabled{opacity:.6;cursor:default}
+.dir.wechsel{animation:blink .6s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+.stopp{width:100%;padding:16px;border:0;border-radius:12px;background:var(--rot);color:#fff;font:800 22px var(--kopf);letter-spacing:2px;justify-content:center}
+.stopp .i{width:26px;height:26px}
+
+/* Einstellungen */
+section{background:var(--anthrazit);border:1px solid var(--linie);border-radius:12px;padding:16px}
+h2{font:800 20px/1.1 var(--kopf);letter-spacing:.5px;text-transform:uppercase;margin:0 0 10px}
+input,select{font:inherit;font-size:15px;padding:7px 9px;border-radius:8px;border:1px solid var(--linie);background:var(--tief);color:var(--text);min-width:0}
+input:focus,select:focus{outline:2px solid var(--orange);outline-offset:-1px}
+input[type=checkbox]{accent-color:var(--orange);width:18px;height:18px;vertical-align:-3px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ctrl{border:1px solid var(--linie);border-radius:10px;padding:12px;display:grid;gap:10px;background:var(--flaeche)}
+.ctrl .top{display:flex;align-items:center;gap:8px}
+.ctrl .top b{flex:1;font:700 16px var(--kopf);letter-spacing:.5px;text-transform:uppercase}
+.ctrl .pct{font:700 22px var(--kopf);min-width:64px;text-align:right;color:var(--orange)}
+.ctrl input[type=range]{width:100%;height:30px;accent-color:var(--orange);padding:0;border:0;background:none}
+.led{width:16px;height:16px;border-radius:50%;background:var(--tief);border:1px solid var(--mittel);flex:none}
+.led.on{background:var(--orange);border-color:var(--orange);box-shadow:0 0 10px var(--orange)}
+.bar{position:relative;height:12px;background:var(--tief);border:1px solid var(--linie);border-radius:6px;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;background:var(--orange)}
+.bar:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid var(--mittel)}
+.hubs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.hub{border:1px solid var(--linie);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--flaeche)}
+.hub .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hub .row input[type=text]{flex:1}
+.hub .row b{font:700 17px var(--kopf);letter-spacing:.5px;text-transform:uppercase}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font:700 13px var(--kopf);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;background:#ffffff14;color:var(--text-2)}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.ok{background:#2F9E5B33;color:#5FD08E}
+.badge.warn{background:#FF99002b;color:var(--orange-hell)}
+table{width:100%;border-collapse:collapse}
+td{padding:3px 4px;vertical-align:middle}
+td.port{font:700 16px var(--kopf);width:24px;color:var(--orange)}
+td.val{width:90px}
+td label{white-space:nowrap}
+.conflict{color:var(--orange-hell);font-size:13px}
+.arch{list-style:none;padding:0;margin:8px 0 0}
+.arch li{display:flex;gap:8px;align-items:center;padding:8px 0;flex-wrap:wrap;border-bottom:1px dashed var(--linie)}
+.arch li b{font:700 17px var(--kopf);letter-spacing:.5px;flex:1;min-width:140px}
+.klein{padding:5px 10px;font-size:13px}
+.scan li{display:flex;gap:8px;align-items:center;padding:6px 0;flex-wrap:wrap;border-bottom:1px dashed var(--linie)}
+.scan ul{list-style:none;padding:0;margin:8px 0 0}
+code{font:13px ui-monospace,monospace;background:var(--tief);padding:1px 5px;border-radius:4px}
+.form{display:grid;grid-template-columns:max-content 1fr;gap:8px 10px;align-items:center;max-width:480px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#msg{font-size:14px}
+@media (max-width:420px){#net{display:none}td.val{width:56px}.marke b{font-size:15px}}
+</style>
+</head>
+<body>
+<svg style="display:none">
+<symbol id="marke" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#383E42" stroke="#5A6268"/><path d="M2 14h28M2 18h28" stroke="#fff" stroke-width="2"/><g fill="#F90"><circle cx="10" cy="7" r="4.5"/><circle cx="22" cy="7" r="4.5"/><circle cx="10" cy="25" r="4.5"/><circle cx="22" cy="25" r="4.5"/></g></symbol>
+<symbol id="i-notstopp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.3 2h7.4L22 8.3v7.4L15.7 22H8.3L2 15.7V8.3z"/><path d="M7.5 12h9"/></symbol>
+<symbol id="i-einstellungen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h10M19 6h2M3 12h4M11 12h10M3 18h12M19 18h2"/><circle cx="16" cy="6" r="2.5"/><circle cx="9" cy="12" r="2.5"/><circle cx="17" cy="18" r="2.5"/></symbol>
+<symbol id="i-lok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16V9h9V4h7v12z"/><path d="M18 9h2.5l1.5 7h-4"/><path d="M5 9V6"/><circle cx="6" cy="18.5" r="2"/><circle cx="14" cy="18.5" r="2"/><path d="M13 7h3"/></symbol>
+<symbol id="i-funk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M2 9a14 14 0 0 1 20 0"/><path d="M12 19.5h.01"/></symbol>
+<symbol id="i-warnung" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+</svg>
+
+<header>
+<div class="marke"><svg><use href="#marke"/></svg><div><b>STUD RAIL MASTER</b><span>QUADRO</span></div></div>
+<span class="mute" id="net"></span>
+<button class="nur-icon" id="langBtn" title="Sprache / Language">EN</button>
+<button class="nur-icon" id="navBtn" title="Einstellungen"><svg class="i"><use href="#i-einstellungen"/></svg></button>
+<button class="rot nur-icon" id="estopTop" title="Not-Stopp" hidden><svg class="i"><use href="#i-notstopp"/></svg></button>
+</header>
+
+<main id="driveView">
+<div class="kopf"><span id="kopfOrt">StudRailMasterQuadro.local · Fahren</span><span class="st" id="hubCount"></span></div>
+<div class="mute" id="hubDetail"></div>
+<div class="hinweis" id="banner" hidden><svg class="i"><use href="#i-warnung"/></svg><div data-t><b>Not-Stopp aktiv</b>Alle benutzten Regler auf 0 stellen, dann geht es weiter.</div></div>
+<div class="hinweis info" id="pcBanner" hidden><svg class="i"><use href="#i-funk"/></svg><div><div id="pcText"></div><div class="actions" id="pcTake" hidden><button id="takeBtn" data-t>Funk zurückholen</button></div></div></div>
+<div class="hebel" id="drive"></div>
+<section id="driveHint" data-t hidden>Noch kein Regler einem Hub zugeordnet. Unter <b>Einstellungen</b> festlegen und speichern.</section>
+<button class="stopp" id="estopBtn"><svg class="i"><use href="#i-notstopp"/></svg><span data-t>NOT-STOPP</span></button>
+<p class="mute" id="driveInfo"></p>
+</main>
+
+<main id="setupView" hidden>
+<section>
+<div class="actions" style="margin-bottom:10px"><h2 style="margin:0;flex:1" data-t>Fahrregler</h2>
+<label class="mute"><span data-t>Eingabe</span> <select id="inputMode"><option value="web" data-t>Schieberegler (GUI)</option><option value="hw" data-t>Potis + Schalter am ESP</option></select></label></div>
+<div class="ctrls" id="ctrls"></div>
+<p class="mute" id="ctrlHint"></p>
+<div class="actions"><label for="revSec" data-t>Richtungswechsel während der Fahrt</label>
+<input id="revSec" type="number" min="0" max="20" step="0.5" style="width:80px"> <span class="mute" data-t>s von voll vor bis voll zurück, 0 = sofort umschalten</span>
+<span id="revMsg" class="mute"></span></div>
+</section>
+
+<section>
+<h2>Hubs</h2>
+<p class="mute" data-t>Jeden Port einem Fahrregler zuordnen. Ein Regler darf mehrere Ports steuern, auch auf verschiedenen Hubs.
+Beim JMC-Hub teilen sich A+B bzw. C+D die Geschwindigkeit, nur die Richtung ist getrennt.</p>
+<div class="hubs" id="hubs"></div>
+<h2 style="margin-top:20px" data-t>Archiv</h2>
+<p class="mute" data-t>Gespeicherte Hubs, die gerade nicht benutzt werden. Gleichzeitig aktiv sind höchstens 4.</p>
+<ul class="arch" id="archive"></ul>
+<div class="actions" style="margin-top:12px"><button class="primaer" id="saveBtn" data-t>Speichern</button><span id="msg"></span></div>
+</section>
+
+<section class="scan">
+<h2 data-t>Hubs suchen</h2>
+<div class="actions"><button id="scanBtn" data-t>Scan starten (5 s)</button><span class="mute" id="scanInfo"></span></div>
+<ul id="scanList"></ul>
+</section>
+
+<section>
+<h2 data-t>WLAN</h2>
+<p class="mute" data-t>Ohne Heim-WLAN (oder wenn es nach 10 s nicht erreichbar ist) startet ein Access Point mit dem Gerätenamen unter 192.168.4.1. Der Gerätename ist auch die Adresse: http://Gerätename.local (Groß/Kleinschreibung egal). Bei mehreren Fernbedienungen jeder einen eigenen Namen geben. Änderungen wirken nach einem Neustart.</p>
+<div class="form">
+<label for="host" data-t>Gerätename</label><input id="host" type="text" maxlength="32" pattern="[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?" placeholder="StudRailMasterQuadro">
+<label for="ssid" data-t>Heim-WLAN</label><input id="ssid" type="text" data-tp placeholder="leer = nur Access Point">
+<label for="pass" data-t>Passwort</label><input id="pass" type="password" placeholder="unverändert">
+<label for="appass" data-t>AP-Passwort</label><input id="appass" type="password" data-tp placeholder="unverändert (min. 8 Zeichen)">
+</div>
+<div class="actions" style="margin-top:12px"><button id="wifiSave" data-t>WLAN speichern</button><button id="restartBtn" data-t>Neustart</button><span id="wifiMsg" class="mute"></span></div>
+</section>
+<p class="mute" id="foot"></p>
+</main>
+<p class="mute" style="text-align:center;margin:0 0 18px">Stud Rail Master Quadro · In Herbrechtingen ist es immer am schönsten!</p>
+<script>
+const $=id=>document.getElementById(id);
+
+// Sprache: Deutsch ist der Text im Code, EN übersetzt ihn (Schlüssel = deutscher Text)
+const EN={
+'Not-Stopp aktiv':'Emergency stop active','NOT-STOPP':'EMERGENCY STOP',
+'<b>Not-Stopp aktiv</b>Alle benutzten Regler auf 0 stellen, dann geht es weiter.':'<b>Emergency stop active</b>Set all used controllers to 0 to continue.',
+'Noch kein Regler einem Hub zugeordnet. Unter <b>Einstellungen</b> festlegen und speichern.':'No controller is assigned to a hub yet. Set it up under <b>Settings</b> and save.',
+'Fahren':'Drive','Einstellungen':'Settings','Fahrregler':'Controllers','Eingabe':'Input',
+'Schieberegler (GUI)':'Sliders (GUI)','Potis + Schalter am ESP':'Pots + switches on the ESP',
+'Richtungswechsel während der Fahrt':'Direction change while moving',
+'s von voll vor bis voll zurück, 0 = sofort umschalten':'s from full forward to full reverse, 0 = switch instantly',
+'Jeden Port einem Fahrregler zuordnen. Ein Regler darf mehrere Ports steuern, auch auf verschiedenen Hubs.\nBeim JMC-Hub teilen sich A+B bzw. C+D die Geschwindigkeit, nur die Richtung ist getrennt.':'Assign each port to a controller. One controller may drive several ports, even on different hubs.\nOn the JMC hub, A+B and C+D share one speed; only the direction is separate.',
+'Speichern':'Save','Hubs suchen':'Find hubs','Scan starten (5 s)':'Start scan (5 s)',
+'Ohne Heim-WLAN (oder wenn es nach 10 s nicht erreichbar ist) startet ein Access Point mit dem Gerätenamen unter 192.168.4.1. Der Gerätename ist auch die Adresse: http://Gerätename.local (Groß/Kleinschreibung egal). Bei mehreren Fernbedienungen jeder einen eigenen Namen geben. Änderungen wirken nach einem Neustart.':'Without home Wi-Fi (or if it cannot be reached within 10 s) an access point named after the device starts at 192.168.4.1. The device name is also the address: http://device-name.local (upper/lower case does not matter). Give each remote its own name if you have several. Changes take effect after a restart.',
+'Heim-WLAN':'Home Wi-Fi','Gerätename':'Device name','WLAN':'Wi-Fi','Passwort':'Password','AP-Passwort':'AP password','leer = nur Access Point':'empty = access point only',
+'unverändert':'unchanged','unverändert (min. 8 Zeichen)':'unchanged (min. 8 characters)','kein Passwort':'no password',
+'WLAN speichern':'Save Wi-Fi','Neustart':'Restart',
+'VOR':'FWD','ZURÜCK':'REV','Regler':'Controller','Richtung umkehren':'Reverse direction','Richtungs-LED':'Direction LED',
+'Gesteuert wird mit den Potis und Schaltern am ESP.':'Driven by the pots and switches on the ESP.',
+'Zum Fahren den Hebel hoch- oder runterziehen. Bricht die Verbindung ab, stoppt der ESP nach 2 s alle Motoren.':'Drag a lever up or down to drive. If the connection drops, the ESP stops all motors after 2 s.',
+'Werte kommen von den Potis (GPIO 34/35/32/33) und Schaltern (GPIO 16–19) am ESP.':'Values come from the pots (GPIO 34/35/32/33) and switches (GPIO 16–19) on the ESP.',
+'Bricht die Verbindung zur Seite ab, stoppt der ESP nach 2 s alle Motoren.':'If the connection to this page drops, the ESP stops all motors after 2 s.',
+'Name':'Name','JMC (BLE-Verbindung)':'JMC (BLE connection)','Blinken':'blinks','Einlernen':'Pair','aktiv':'active','umpolen':'invert',
+'Hub einschalten, dann „Einlernen“. Slot mit der Taste am Hub wählen (nach dem Einschalten Slot 0).':'Switch the hub on, then “Pair”. Choose the slot with the button on the hub (slot 0 after power-on).',
+'Ungespeicherte Änderungen':'Unsaved changes','hängen an verschiedenen Reglern – es gilt der größere Speed.':'are on different controllers – the higher speed applies.',
+'Gespeichert ✓':'Saved ✓','Fehler: ':'Error: ','Gespeichert – wirkt nach Neustart':'Saved – takes effect after restart',
+'Laufzeit':'Uptime','freier Speicher':'free memory','keine Verbindung':'no connection',
+'suche …':'searching …','Geräte mit Namen gefunden':'named devices found','frei':'free','übernehmen':'use',
+'Übernommen – Speichern nicht vergessen':'Taken over – don’t forget to save',
+'ESP neu starten? Alle Motoren werden vorher gestoppt.':'Restart the ESP? All motors are stopped first.',
+'Archiv':'Archive','Gespeicherte Hubs, die gerade nicht benutzt werden. Gleichzeitig aktiv sind höchstens 4.':'Saved hubs that are not in use right now. At most 4 can be active at once.',
+'Ins Archiv':'Archive','Platz':'Position','Holen':'Restore','Löschen':'Delete','Archiv ist leer.':'Archive is empty.',
+'Archiv voll':'Archive full','Aus dem Archiv löschen?':'Delete from archive?',
+'Funk zurückholen':'Take radio back','Live-Link':'Live link','schaut zu und darf mitfahren.':'is watching and may drive along.','schaut zu.':'is watching.',
+'Funk beim PC':'Radio on the PC','fährt gerade die Hubs. Die Regler hier ruhen.':'is driving the hubs right now. The controls here rest.',
+'Holst du den Funk zurück, verliert der PC seine Hubs.':'If you take the radio back, the PC loses its hubs.',
+'beim PC':'on the PC','aus':'off','verbindet':'connecting','verbunden':'connected','getrennt':'disconnected','sendet':'sending','lernt ein':'pairing','Fehler':'error'
+};
+let lang='de';
+try{lang=new URLSearchParams(location.search).get('lang')||localStorage.getItem('lang')||'de';}catch(e){}  // ?lang=en zum Testen
+const T=s=>lang==='en'&&EN[s]||s;
+function applyLang(){
+  document.documentElement.lang=lang;
+  $('langBtn').textContent=lang==='en'?'DE':'EN';
+  $('kopfOrt').textContent=`${location.hostname||'StudRailMasterQuadro.local'} · ${T('Fahren')}`;
+  document.querySelectorAll('[data-t]').forEach(el=>{if(el.dataset.de===undefined)el.dataset.de=el.innerHTML;el.innerHTML=T(el.dataset.de);});
+  document.querySelectorAll('[data-tp]').forEach(el=>{if(el.dataset.de===undefined)el.dataset.de=el.placeholder;el.placeholder=T(el.dataset.de);});
+}
+function setLang(l){
+  lang=l;try{localStorage.setItem('lang',l);}catch(e){}
+  applyLang();renderCtrls();route();
+  if(config){renderHubs();renderDrive();$('pass').placeholder=T(config.wifi.passSet?'unverändert':'kein Passwort');}
+  applyInputMode();
+}
+const PORTS=['A','B','C','D'];
+let config=null, saved=null, dirty=false;
+
+function api(path,body){
+  const o=body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
+  return fetch(path,o).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j;});
+}
+function bar(v){const w=Math.abs(v)/2;return `<div class="bar"><i style="left:${v<0?50-w:50}%;width:${w}%"></i></div>`;}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+let inputMode='web';
+const localEdit=[0,0,0,0];  // Zeitpunkt der letzten eigenen Änderung je Regler
+const pending={}, sendTimer={};
+
+// Aktualisiert Regler i in beiden Ansichten
+function showChannel(i,speed,rev,withValue){
+  const led=$('cl'+i),d=$('dd'+i);
+  if(led)led.classList.toggle('on',rev);
+  if(d){d.classList.toggle('vor',!rev);d.textContent=T(rev?'ZURÜCK':'VOR');}
+  if(!withValue)return;
+  $('cs'+i).value=speed;$('cp'+i).textContent=speed+' %';$('cr'+i).checked=rev;
+  if($('df'+i)){$('dk'+i).style.bottom=`max(4px, calc(${speed}% - 6px))`;$('dp'+i).textContent=speed;}
+}
+const chState=[0,1,2,3].map(()=>({speed:0,reversed:false}));
+function setLocal(i,v){
+  Object.assign(chState[i],v);
+  showChannel(i,chState[i].speed,chState[i].reversed,true);
+  sendInput(i,v);
+}
+
+// Welche Hub-Ports hängen an Regler ch? (nur gespeicherte Einstellungen)
+function usedBy(ch){
+  const out=[];
+  saved.hubs.forEach(h=>{if(!h.enabled)return;
+    const ps=h.routes.map((r,p)=>r.source===ch+1?PORTS[p]:null).filter(Boolean);
+    if(ps.length)out.push(`${esc(h.name)} <i>${ps.join('+')}</i>`);});
+  return out;
+}
+
+function renderDrive(){
+  const used=[0,1,2,3].filter(i=>usedBy(i).length);
+  $('driveHint').hidden=used.length>0;
+  $('drive').style.gridTemplateColumns=`repeat(${Math.max(used.length,1)},1fr)`;
+  $('drive').innerHTML=used.map(i=>`<div>
+    <div class="bahn" id="df${i}"><div class="fuell" id="dfill${i}"></div><div class="griff" id="dk${i}"></div><div class="wert" id="dp${i}">0</div>
+      <div class="lok">${usedBy(i).join('<br>')}</div></div>
+    <button class="dir vor" id="dd${i}">${T('VOR')}</button>
+  </div>`).join('');
+  used.forEach(i=>{
+    const f=$('df'+i);let startY=0,startV=0;
+    // Relativ ziehen: Antippen allein ändert die Geschwindigkeit nicht
+    f.addEventListener('pointerdown',e=>{if(inputMode==='hw')return;f.setPointerCapture(e.pointerId);startY=e.clientY;startV=chState[i].speed;});
+    f.addEventListener('pointermove',e=>{if(!f.hasPointerCapture(e.pointerId))return;
+      const v=Math.max(0,Math.min(100,Math.round(startV+(startY-e.clientY)/f.clientHeight*100)));
+      if(v!==chState[i].speed)setLocal(i,{speed:v});});
+    $('dd'+i).addEventListener('click',()=>setLocal(i,{reversed:!chState[i].reversed}));
+    showChannel(i,chState[i].speed,chState[i].reversed,true);
+  });
+  applyInputMode();
+}
+
+function route(){
+  const setup=location.hash==='#einstellungen';
+  $('driveView').hidden=setup;$('setupView').hidden=!setup;$('estopTop').hidden=!setup;
+  $('navBtn').innerHTML=`<svg class="i"><use href="#i-${setup?'lok':'einstellungen'}"/></svg>`;
+  $('navBtn').title=T(setup?'Fahren':'Einstellungen');
+}
+
+function renderCtrls(){
+  $('ctrls').innerHTML=[0,1,2,3].map(i=>`<div class="ctrl">
+    <div class="top"><b>${T('Regler')} ${i+1}</b><span class="pct" id="cp${i}">0 %</span></div>
+    <input type="range" min="0" max="100" value="0" id="cs${i}">
+    <div class="top"><label><input type="checkbox" id="cr${i}"> ${T('Richtung umkehren')}</label>
+      <span style="flex:1"></span><span class="led" id="cl${i}" title="${T('Richtungs-LED')}"></span></div>
+  </div>`).join('');
+  [0,1,2,3].forEach(i=>{
+    $('cs'+i).addEventListener('input',e=>setLocal(i,{speed:+e.target.value}));
+    $('cr'+i).addEventListener('change',e=>setLocal(i,{reversed:e.target.checked}));
+  });
+}
+
+// Höchstens alle 80 ms senden, der letzte Wert geht immer raus
+function sendInput(i,v){
+  localEdit[i]=Date.now();
+  pending[i]=Object.assign(pending[i]||{},v);
+  if(sendTimer[i])return;
+  const flush=()=>{const body=pending[i];delete pending[i];
+    if(!body){sendTimer[i]=null;return;}
+    api('/api/input',Object.assign({ch:i},body)).catch(()=>{});
+    sendTimer[i]=setTimeout(flush,80);};
+  flush();
+}
+
+function applyInputMode(){
+  const hw=inputMode==='hw';
+  $('inputMode').value=inputMode;
+  [0,1,2,3].forEach(i=>{$('cs'+i).disabled=hw;$('cr'+i).disabled=hw;
+    if($('df'+i)){$('df'+i).classList.toggle('aus',hw);$('dd'+i).disabled=hw;}});
+  $('driveInfo').textContent=T(hw?'Gesteuert wird mit den Potis und Schaltern am ESP.':'Zum Fahren den Hebel hoch- oder runterziehen. Bricht die Verbindung ab, stoppt der ESP nach 2 s alle Motoren.');
+  $('ctrlHint').textContent=T(hw?'Werte kommen von den Potis (GPIO 34/35/32/33) und Schaltern (GPIO 16–19) am ESP.'
+    :'Bricht die Verbindung zur Seite ab, stoppt der ESP nach 2 s alle Motoren.');
+}
+
+function renderHubs(){
+  $('hubs').innerHTML=config.hubs.map((h,i)=>`
+  <div class="hub">
+    <div class="row"><b>Hub ${i+1}</b><span class="badge" id="hs${i}">–</span><span class="mute" id="hr${i}"></span>
+      ${isEmpty(h)?'':`<span style="flex:1"></span><button class="klein" data-arch="${i}">${T('Ins Archiv')}</button>`}</div>
+    <div class="row"><input type="text" data-h="${i}" data-f="name" value="${esc(h.name)}" placeholder="${T('Name')}"></div>
+    <div class="row"><select data-h="${i}" data-f="type">
+      <option value="jmc" ${h.type==='jmc'?'selected':''}>${T('JMC (BLE-Verbindung)')}</option>
+      <option value="mk4" ${h.type==='mk4'?'selected':''}>Mould King 4.0</option>
+      <option value="lego" ${h.type==='lego'?'selected':''}>LEGO City Hub</option></select></div>
+    ${h.type==='mk4'?`<div class="row"><select data-h="${i}" data-f="slot">${[0,1,2].map(n=>`<option value="${n}" ${h.slot==n?'selected':''}>Slot ${n} (${n+1}× ${T('Blinken')})</option>`).join('')}</select>
+      <button data-pair>${T('Einlernen')}</button>
+      <label><input type="checkbox" data-h="${i}" data-f="enabled" ${h.enabled?'checked':''}> ${T('aktiv')}</label></div>
+    <div class="mute">${T('Hub einschalten, dann „Einlernen“. Slot mit der Taste am Hub wählen (nach dem Einschalten Slot 0).')}</div>`
+    :`<div class="row"><input type="text" data-h="${i}" data-f="mac" value="${esc(h.mac)}" placeholder="aa:bb:cc:dd:ee:ff">
+      <label><input type="checkbox" data-h="${i}" data-f="enabled" ${h.enabled?'checked':''}> ${T('aktiv')}</label></div>`}
+    <table>${h.routes.slice(0,portCount(h)).map((r,p)=>`<tr><td class="port">${PORTS[p]}</td>
+      <td><select data-h="${i}" data-p="${p}" data-f="source">${[0,1,2,3,4].map(s=>`<option value="${s}" ${r.source==s?'selected':''}>${s?T('Regler')+' '+s:'–'}</option>`).join('')}</select></td>
+      <td><label><input type="checkbox" data-h="${i}" data-p="${p}" data-f="invert" ${r.invert?'checked':''}> ${T('umpolen')}</label></td>
+      <td class="val" id="pv${i}_${p}">${bar(0)}</td></tr>`).join('')}</table>
+    <div class="conflict" id="hc${i}"></div>
+  </div>`).join('');
+  document.querySelectorAll('#hubs [data-f]').forEach(el=>el.addEventListener('change',onEdit));
+  document.querySelectorAll('#hubs input[type=text]').forEach(el=>el.addEventListener('input',onEdit));
+  document.querySelectorAll('#hubs [data-pair]').forEach(el=>el.addEventListener('click',()=>api('/api/mkpair',{}).catch(()=>{})));
+  document.querySelectorAll('#hubs [data-arch]').forEach(el=>el.addEventListener('click',()=>toArchive(+el.dataset.arch)));
+  updateConflicts();
+  renderArchive();
+}
+
+// --- Archiv: Hubs parken und wieder auf einen Platz holen (gespeichert wird mit „Speichern“) ---
+const MAX_ARCHIVE=16;
+const portCount=h=>h.type==='lego'?2:4;  // LEGO City Hub: nur A/B
+const emptyHub=i=>({name:`Hub ${i+1}`,type:'jmc',mac:'',slot:0,enabled:false,routes:PORTS.map(()=>({source:0,invert:false}))});
+const isEmpty=h=>!h.mac&&h.type!=='mk4'&&h.routes.every(r=>!r.source);
+function markDirty(text){dirty=true;$('msg').textContent=T(text);$('msg').style.color='var(--orange-hell)';}
+function hubInfo(h){
+  const ports=h.routes.map((r,p)=>r.source?`${PORTS[p]}→${r.source}`:'').filter(Boolean).join(' ');
+  return (h.type==='mk4'?`Mould King · Slot ${h.slot}`:`${h.type==='lego'?'LEGO':'JMC'} · ${h.mac||'–'}`)+(ports?` · ${ports}`:'');
+}
+function toArchive(i){
+  if(config.archive.length>=MAX_ARCHIVE){alert(T('Archiv voll'));return;}
+  config.archive.push(Object.assign(JSON.parse(JSON.stringify(config.hubs[i])),{enabled:false}));
+  config.hubs[i]=emptyHub(i);
+  markDirty('Ungespeicherte Änderungen');renderHubs();
+}
+function fromArchive(k,i){
+  const a=config.archive[k],old=config.hubs[i];
+  // Belegter Platz: der bisherige Hub tauscht ins Archiv
+  if(isEmpty(old))config.archive.splice(k,1);else config.archive[k]=Object.assign(old,{enabled:false});
+  config.hubs[i]=Object.assign(a,{enabled:true});
+  markDirty('Ungespeicherte Änderungen');renderHubs();
+}
+function renderArchive(){
+  const a=config.archive;
+  $('archive').innerHTML=a.length?a.map((h,k)=>`<li><b>${esc(h.name)}</b><span class="mute" style="flex-basis:100%">${esc(hubInfo(h))}</span>
+    <select>${config.hubs.map((o,i)=>`<option value="${i}">→ ${T('Platz')} ${i+1}${isEmpty(o)?' ('+T('frei')+')':' ('+esc(o.name)+')'}</option>`).join('')}</select>
+    <button class="klein" data-get="${k}">${T('Holen')}</button><button class="klein" data-del="${k}">${T('Löschen')}</button></li>`).join('')
+    :`<li class="mute">${T('Archiv ist leer.')}</li>`;
+  // Vorauswahl: erster freier Platz
+  const free=config.hubs.findIndex(isEmpty);
+  $('archive').querySelectorAll('select').forEach(sel=>{if(free>=0)sel.value=free;});
+  $('archive').querySelectorAll('[data-get]').forEach(b=>b.onclick=()=>fromArchive(+b.dataset.get,+b.parentElement.querySelector('select').value));
+  $('archive').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    if(!confirm(T('Aus dem Archiv löschen?')))return;
+    config.archive.splice(+b.dataset.del,1);markDirty('Ungespeicherte Änderungen');renderArchive();});
+}
+
+function onEdit(e){
+  const el=e.target,h=config.hubs[el.dataset.h],f=el.dataset.f;
+  if(el.dataset.p!==undefined){const r=h.routes[el.dataset.p];if(f==='source')r.source=+el.value;else r.invert=el.checked;}
+  else if(f==='enabled')h.enabled=el.checked; else if(f==='slot')h.slot=+el.value; else h[f]=el.value.trim();
+  dirty=true;$('msg').textContent=T('Ungespeicherte Änderungen');$('msg').style.color='var(--orange-hell)';
+  if(f==='type'){if(h.type==='lego')h.routes.slice(2).forEach(r=>{r.source=0;r.invert=false;});renderHubs();} else updateConflicts();
+}
+
+function updateConflicts(){
+  config.hubs.forEach((h,i)=>{
+    const w=[];if(h.type==='jmc')[[0,1],[2,3]].forEach(([a,b])=>{const sa=h.routes[a].source,sb=h.routes[b].source;
+      if(sa&&sb&&sa!==sb)w.push(`${PORTS[a]}/${PORTS[b]} ${T('hängen an verschiedenen Reglern – es gilt der größere Speed.')}`);});
+    $('hc'+i).textContent=w.join(' ');
+  });
+}
+
+async function loadConfig(){
+  config=await api('/api/config');
+  config.archive=config.archive||[];
+  saved=JSON.parse(JSON.stringify(config));
+  inputMode=config.input;applyInputMode();
+  renderHubs();renderDrive();
+  $('revSec').value=config.reverseMs/1000;
+  $('ssid').value=config.wifi.ssid;$('host').value=config.wifi.host||'';
+  $('pass').placeholder=T(config.wifi.passSet?'unverändert':'kein Passwort');
+  dirty=false;
+}
+
+async function save(){
+  try{
+    await api('/api/config',{hubs:config.hubs,archive:config.archive});
+    saved=JSON.parse(JSON.stringify(config));renderDrive();
+    $('msg').textContent=T('Gespeichert ✓');$('msg').style.color='#5FD08E';dirty=false;
+  }catch(e){$('msg').textContent=T('Fehler: ')+e.message;$('msg').style.color='var(--rot)';}
+}
+
+async function poll(){
+  try{
+    const s=await api('/api/state');
+    $('banner').hidden=!s.estop||s.radio==='pc';
+    // Live-Link mit Stud Rail Master (PC)
+    const pcRadio=s.radio==='pc',pcOn=s.pc&&s.pc.online;
+    $('pcBanner').hidden=!(pcRadio||pcOn);$('pcTake').hidden=!pcRadio;
+    if(pcRadio)$('pcText').innerHTML=`<b>${T('Funk beim PC')}</b>${esc(s.pc?s.pc.name:'PC')} ${T('fährt gerade die Hubs. Die Regler hier ruhen.')} ${T('Holst du den Funk zurück, verliert der PC seine Hubs.')}`;
+    else if(pcOn)$('pcText').innerHTML=`<b>${T('Live-Link')}</b>${esc(s.pc.name)} (${esc(s.pc.ip)}) ${T(s.input==='web'?'schaut zu und darf mitfahren.':'schaut zu.')}`;
+    $('net').textContent=`${T(s.net.mode)} ${s.net.ip}`;
+    $('kopfOrt').textContent=`${location.hostname||'StudRailMasterQuadro.local'} · ${T('Fahren')}`;
+    if(s.input!==inputMode){inputMode=s.input;applyInputMode();}
+    s.channels.forEach((c,i)=>{
+      // eigene Eingabe der letzten 600 ms nicht vom Server überschreiben lassen
+      if(Date.now()-localEdit[i]<600){showChannel(i,chState[i].speed,chState[i].reversed,false);return;}
+      chState[i]={speed:c.speed,reversed:c.reversed};
+      showChannel(i,c.speed,c.reversed,true);
+    });
+    // Füllung = tatsächliche Geschwindigkeit; blinkt die Richtung, läuft gerade ein Wechsel
+    s.channels.forEach((c,i)=>{if(!$('df'+i))return;
+      $('dfill'+i).style.height=Math.abs(c.value)+'%';
+      $('dd'+i).classList.toggle('wechsel',c.value!==0&&(c.value<0)!==chState[i].reversed);});
+    if(saved){
+      const on=saved.hubs.map((h,i)=>({h,s:s.hubs[i]})).filter(x=>x.h.enabled),ready=on.filter(x=>x.s.ready).length;
+      const c=$('hubCount');c.className='st '+(ready===on.length?'ok':'warn');
+      c.textContent=ready===on.length?`${on.length} ${on.length===1?'Hub':'Hubs'}`:`${ready}/${on.length} Hubs`;
+      $('hubDetail').textContent=on.filter(x=>!x.s.ready).map(x=>`${x.h.name}: ${T(x.s.state)}`).join(' · ');
+    }
+    if(config)s.hubs.forEach((h,i)=>{
+      const b=$('hs'+i);if(!b)return;
+      b.textContent=T(h.state);b.className='badge'+(h.ready?' ok':h.state==='aus'?'':' warn');
+      $('hr'+i).textContent=h.ready&&h.rssi?`${h.rssi} dBm`:'';
+      h.ports.forEach((v,p)=>{const c=$(`pv${i}_${p}`);if(c)c.innerHTML=bar(v);});
+    });
+    $('foot').textContent=`${T('Laufzeit')} ${s.uptime} s · ${T('freier Speicher')} ${Math.round(s.heap/1024)} kB`;
+  }catch(e){$('net').textContent=T('keine Verbindung');}
+}
+
+async function scan(){
+  await api('/api/scan',{});
+  $('scanInfo').textContent=T('suche …');$('scanList').innerHTML='';
+  const t=setInterval(async()=>{
+    const r=await api('/api/scan');if(r.running)return;clearInterval(t);
+    $('scanInfo').textContent=`${r.devices.length} ${T('Geräte mit Namen gefunden')}`;
+    r.devices.sort((a,b)=>b.rssi-a.rssi);
+    $('scanList').innerHTML=r.devices.map(d=>`<li><code>${esc(d.mac)}</code> <b>${esc(d.name)}</b>
+      <span class="mute">${d.rssi} dBm</span>
+      <select>${config.hubs.map((h,i)=>`<option value="${i}">→ Hub ${i+1}${h.mac?' ('+esc(h.name)+')':' ('+T('frei')+')'}</option>`).join('')}</select>
+      <button data-mac="${esc(d.mac)}" data-name="${esc(d.name)}" data-type="${esc(d.type||'jmc')}">${T('übernehmen')}</button></li>`).join('');
+    $('scanList').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
+      const i=+btn.previousElementSibling.value,h=config.hubs[i];
+      h.type=btn.dataset.type;h.mac=btn.dataset.mac;if(!h.mac||h.name.startsWith('Hub '))h.name=btn.dataset.name;h.enabled=true;
+      renderHubs();dirty=true;$('msg').textContent=T('Übernommen – Speichern nicht vergessen');$('msg').style.color='var(--orange-hell)';
+    });
+  },700);
+}
+
+const estop=()=>{[0,1,2,3].forEach(i=>{localEdit[i]=0;delete pending[i];});api('/api/estop',{});};
+$('estopBtn').onclick=estop;$('takeBtn').onclick=()=>api('/api/live',{});$('estopTop').onclick=estop;
+$('inputMode').onchange=async e=>{
+  try{await api('/api/config',{input:e.target.value});inputMode=e.target.value;applyInputMode();}
+  catch(err){alert(T('Fehler: ')+err.message);$('inputMode').value=inputMode;}
+};
+$('saveBtn').onclick=save;
+$('revSec').onchange=async e=>{
+  try{await api('/api/config',{reverseMs:Math.round(+e.target.value*1000)});$('revMsg').textContent=T('Gespeichert ✓');}
+  catch(err){$('revMsg').textContent=T('Fehler: ')+err.message;}
+};
+$('navBtn').onclick=()=>{location.hash=location.hash==='#einstellungen'?'':'#einstellungen';};
+window.addEventListener('hashchange',route);
+$('scanBtn').onclick=scan;
+$('wifiSave').onclick=async()=>{
+  try{await api('/api/config',{wifi:Object.assign({ssid:$('ssid').value,pass:$('pass').value,apPass:$('appass').value},$('host').value.trim()?{host:$('host').value.trim()}:{})});
+    $('wifiMsg').textContent=T('Gespeichert – wirkt nach Neustart');$('pass').value='';$('appass').value='';}
+  catch(e){$('wifiMsg').textContent=T('Fehler: ')+e.message;}
+};
+$('restartBtn').onclick=()=>{if(confirm(T('ESP neu starten? Alle Motoren werden vorher gestoppt.')))api('/api/restart',{});};
+window.onbeforeunload=()=>dirty?'':undefined;
+
+$('langBtn').onclick=()=>setLang(lang==='en'?'de':'en');
+applyLang();renderCtrls();route();
+loadConfig().then(()=>{poll();setInterval(poll,300);});
+</script>
+</body>
+</html>

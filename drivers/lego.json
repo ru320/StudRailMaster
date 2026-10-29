@@ -1,0 +1,48 @@
+{
+  "$schema": "./driver.schema.json",
+  "id": "lego",
+  "name": "LEGO Powered Up City Hub (88009)",
+  "runsOn": ["esp32", "pc"],
+  "transport": {
+    "kind": "gatt",
+    "service": "00001623-1212-efde-1623-785feabcd123",
+    "write": "00001624-1212-efde-1623-785feabcd123",
+    "withResponse": true,
+    "notify": true,
+    "advertisedService": "00001623-1212-efde-1623-785feabcd123",
+    "addressType": "public"
+  },
+  "ports": ["A", "B"],
+  "heartbeatMs": 500,
+  "armWithStop": 0,
+  "watchdog": false,
+  "notes": "LEGO Wireless Protocol 3.0 (LWP3), public spec. One message per port: Port Output Command 0x81, startup 0x11 (execute immediately, feedback), sub command WriteDirectModeData 0x51, mode 0 = power, int8 power -100..100 (0 = float). City Hub ports A = 0x00, B = 0x01. Train motor 88011 and lights 88005 both take StartPower. The hub keeps a motor running while connected (no watchdog) but stops all outputs when the BLE connection drops. A frame is several LWP3 messages back to back; byte 0 of each message is its length, the radio writes them one by one. Hub advertises service 1623 (name is user-defined, default e.g. \"HUB NO.4\"), so scans match by service.",
+  "vectors": {
+    "power": [[0, 0], [1, 1], [50, 50], [100, 100], [-1, -1], [-100, -100], [150, 100], [-150, -100]],
+    "encodePercent": [
+      {
+        "percent": [0, 0],
+        "frame": "08 00 81 00 11 51 00 00 08 00 81 01 11 51 00 00",
+        "source": "LWP3 spec: Port Output Command / WriteDirectModeData StartPower"
+      },
+      {
+        "percent": [100, 0],
+        "frame": "08 00 81 00 11 51 00 64 08 00 81 01 11 51 00 00"
+      },
+      {
+        "percent": [-100, 30],
+        "frame": "08 00 81 00 11 51 00 9C 08 00 81 01 11 51 00 1E"
+      },
+      {
+        "percent": [-1, -50],
+        "frame": "08 00 81 00 11 51 00 FF 08 00 81 01 11 51 00 CE"
+      }
+    ],
+    "messages": [
+      {
+        "frame": "08 00 81 00 11 51 00 64 08 00 81 01 11 51 00 00",
+        "messages": ["08 00 81 00 11 51 00 64", "08 00 81 01 11 51 00 00"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Stud Rail Master
+Comment=Klemmbaustein-Züge per Bluetooth fahren – In Herbrechtingen ist es immer am schönsten!
+Comment[en]=Drive brick-built trains via Bluetooth
+Exec=StudRailMaster
+Icon=stud-rail-master
+Terminal=false
+Categories=Game;Utility;
+Keywords=train;zug;bluetooth;lego;mould king;
