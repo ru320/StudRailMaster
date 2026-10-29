@@ -105,7 +105,13 @@ Neue Erkenntnisse über Hubs landen als Testvektoren in `drivers/*.json` – so 
 
 Ein ESP32-DevKit, vier 75-mm-Schiebepotis, vier Kippschalter mit LED für die Richtung, ein Not-Stopp-Taster und 4× AA-Batterien in einem gedruckten Gehäuse. Ohne Hardware funktioniert die Firmware auch alleine – dann sind die Hebel Schieberegler auf der Webseite `StudRailMasterQuadro.local`.
 
-Schaltplan, Stückliste und das druckbare Gehäuse folgen, sobald sie fertig sind.
+> **Vorschau – noch nicht gedruckt und getestet.** Das Gehäuse ist am Rechner fertig konstruiert, aber noch nicht nachgebaut. Wer es vorher druckt: Rückmeldung ist willkommen.
+
+<p align="center"><img src="hardware/gehaeuse/vorschau.png" width="80%" alt="Gehäuse der Fernbedienung: Pult mit vier orangen Schiebereglern, Kippschaltern und rotem Not-Stopp"></p>
+
+- **[Gehäuse](hardware/gehaeuse/README.md)** – 180 × 180 mm Pult, jedes Teil einfarbig druckbar (ab 185 × 185 mm Bauraum), STL-Dateien und parametrisches CAD-Modell (SolidCraft, STEP)
+- **[Stückliste](hardware/BOM.md)** – Elektronik, Kaufteile, Schrauben
+- Schaltplan folgt; die Belegung der Pins steht in der Stückliste.
 
 ## Für Entwickler
 

@@ -11,7 +11,7 @@
 | `app/packaging/` | PyInstaller recipe, icons |
 | `drivers/` | hub manifests + test vectors, shared by ESP and PC |
 | `src/`, `lib/`, `test/`, `platformio.ini` | ESP32 firmware (PlatformIO, Arduino) |
-| `hardware/` | KiCad schematic, printable case (coming later) |
+| `hardware/` | parts list, printable case with CAD model (preview, untested), schematic to follow |
 | `tools/` | generators and test helpers |
 | `.github/workflows/` | builds the installers |
 

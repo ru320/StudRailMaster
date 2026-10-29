@@ -105,7 +105,13 @@ New findings about hubs go into `drivers/*.json` as test vectors – so PC and r
 
 An ESP32 DevKit, four 75 mm slide pots, four toggle switches with an LED for the direction, an emergency-stop button and 4× AA batteries in a printed case. The firmware also works on its own without any of that – then the levers are sliders on the web page `StudRailMasterQuadro.local`.
 
-Schematic, parts list and the printable case will follow once they are finished.
+> **Preview – not yet printed or tested.** The case is fully designed on the computer but nobody has built it yet. If you print it first, feedback is welcome.
+
+<p align="center"><img src="hardware/gehaeuse/vorschau.png" width="80%" alt="Case of the remote: desk with four orange slide levers, toggle switches and a red emergency stop"></p>
+
+- **[Case](hardware/gehaeuse/README.md)** (German) – 180 × 180 mm desk, every part printable in one colour (build plate from 185 × 185 mm), STL files and a parametric CAD model (SolidCraft, STEP)
+- **[Parts list](hardware/BOM.md)** (German) – electronics, bought parts, screws
+- Schematic to follow; the pin assignment is in the parts list.
 
 ## For developers
 
