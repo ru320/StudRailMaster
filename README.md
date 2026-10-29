@@ -45,7 +45,10 @@ Every socket of every hub gets a throttle – spread any way you like: two motor
 | **Mould King 4.0** (ports A–D, up to 3 hubs) | ⚠ not yet tested | ✘ → Linux or ESP32 with web page | ✔ one-time unlock | ✔ |
 | **LEGO Powered Up City Hub** (88009, e.g. set 60337, ports A/B) | ✔ | ✔ | ✔ | ✔ |
 
-Planned: LEGO Technic Hub, Mould King 6.0.
+**Planned:**
+- **IR hubs** (infrared, protocol like LEGO Power Functions) – transmitter in the remote, the window in the case is already there
+- **BlueBrixx hubs with 2.4 GHz radio**
+- **LEGO Technic Hub** (4 ports), **Mould King 6.0** (as soon as the hubs are available)
 
 ## Get started
 

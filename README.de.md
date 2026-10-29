@@ -45,7 +45,10 @@ Jede Buchse jedes Hubs bekommt einen Fahrregler – frei verteilt: zwei Motoren 
 | **Mould King 4.0** (Ports A–D, bis zu 3 Hubs) | ⚠ noch nicht getestet | ✘ → Linux oder ESP32 mit Webseite | ✔ einmal freischalten | ✔ |
 | **LEGO Powered Up City Hub** (88009, z. B. Set 60337, Ports A/B) | ✔ | ✔ | ✔ | ✔ |
 
-Geplant: LEGO Technic Hub, Mould King 6.0.
+**Geplant:**
+- **IR-Hubs** (Infrarot, Protokoll wie LEGO Power Functions) – Sender in der Fernbedienung, Fenster im Gehäuse ist schon vorgesehen
+- **BlueBrixx-Hubs mit 2,4-GHz-Funk**
+- **LEGO Technic Hub** (4 Ports), **Mould King 6.0** (sobald die Hubs verfügbar sind)
 
 ## Los geht's
 
