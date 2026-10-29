@@ -26,6 +26,10 @@ Beide sprechen dieselben Treiber und können sich abwechseln: Startet der PC, ü
 <img src="docs/img/drive-de.png" width="49%" alt="Fahrseite mit drei Hebeln und Not-Stopp">
 </p>
 
+<p align="center"><img src="docs/img/zuordnung-de.png" width="80%" alt="Vier Fahrregler, frei auf die Buchsen von drei Hubs verteilt"></p>
+
+Jede Buchse jedes Hubs bekommt einen Fahrregler – frei verteilt: zwei Motoren an einem Regler, ein Regler über mehrere Hubs (auch verschiedener Hersteller), einzelne Motoren umgepolt. Mehr dazu in der [Anleitung](docs/de/anleitung.md#das-prinzip-regler-und-hubs).
+
 - **Ein Hebel pro Fahrregler** – hochziehen für mehr Tempo, ein Klick für die Richtung, ein großer roter Not-Stopp (auch per Leertaste).
 - **Deine Züge, deine Bilder** – zu jedem Hub ein Foto, damit du immer weißt, welcher Hebel welchen Zug fährt.
 - **Viele Züge gleichzeitig** – bis zu 16 Fahrregler; ein Regler kann mehrere Loks fahren, auch von verschiedenen Herstellern.

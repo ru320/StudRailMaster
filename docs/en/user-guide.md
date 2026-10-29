@@ -17,6 +17,19 @@ Stud Rail Master lets you drive your brick-built trains from your computer. All 
 
 Want to try the program without a hub first? Start the **demo mode** (see [For the curious](#for-the-curious)).
 
+## The idea: throttles and hubs
+
+![Four throttles, freely spread over the ports of three hubs](../img/zuordnung-en.png)
+
+You don't drive “a hub” – you drive with **throttles**, the levers. In the settings, every socket (port A–D) of every hub gets a throttle. How you spread them is up to you:
+
+- **One throttle, several motors** (throttle 1): two motors on one hub run together, e.g. two locomotives pulling one train.
+- **One throttle across several hubs** (throttle 2): motors on different hubs run as one – even from different makers. If one runs the wrong way, it is **inverted**.
+- **One throttle, one motor** (throttle 3): the simplest case.
+- **Unused sockets** simply stay empty.
+
+On the JMC hub, A and B always run at the same speed (see [Hubs](#hubs)).
+
 ## Driving
 
 ![Drive page](../img/drive-en.png)

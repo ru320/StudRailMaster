@@ -17,6 +17,19 @@ Mit Stud Rail Master fährst du deine Klemmbaustein-Züge vom Computer aus. Du b
 
 Du willst das Programm erst einmal ohne Hub ausprobieren? Dann starte den **Demo-Modus** (siehe [Für Neugierige](#für-neugierige)).
 
+## Das Prinzip: Regler und Hubs
+
+![Vier Fahrregler, frei auf die Buchsen von drei Hubs verteilt](../img/zuordnung-de.png)
+
+Du fährst nicht „einen Hub“, sondern mit **Fahrreglern** – den Hebeln. Jede Buchse (Port A–D) an jedem Hub bekommt in den Einstellungen einen Regler zugewiesen. Wie du das verteilst, ist frei:
+
+- **Ein Regler, mehrere Motoren** (Regler 1): zwei Motoren an einem Hub fahren zusammen, etwa zwei Loks in Doppeltraktion.
+- **Ein Regler über mehrere Hubs** (Regler 2): Motoren an verschiedenen Hubs fahren wie einer – auch von verschiedenen Herstellern. Fährt einer falsch herum, wird er **umgepolt**.
+- **Ein Regler, ein Motor** (Regler 3): der einfachste Fall.
+- **Freie Buchsen** bleiben einfach leer.
+
+Beim JMC-Hub fahren A und B immer gleich schnell (siehe [Hubs](#hubs)).
+
 ## Fahren
 
 ![Fahrseite](../img/drive-de.png)

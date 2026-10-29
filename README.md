@@ -26,6 +26,10 @@ Both share the same drivers and take turns: when the PC starts it takes over the
 <img src="docs/img/drive-en.png" width="49%" alt="Drive page with three levers and emergency stop">
 </p>
 
+<p align="center"><img src="docs/img/zuordnung-en.png" width="80%" alt="Four throttles, freely spread over the ports of three hubs"></p>
+
+Every socket of every hub gets a throttle – spread any way you like: two motors on one throttle, one throttle across several hubs (even from different makers), single motors inverted. More in the [user guide](docs/en/user-guide.md#the-idea-throttles-and-hubs).
+
 - **One lever per throttle** – drag up to go faster, one tap to change direction, a big red emergency stop (also on the space bar).
 - **Your trains, your pictures** – put a photo on every hub so you always know which lever moves which train.
 - **Many trains at once** – up to 16 throttles; one throttle can drive several locomotives, even from different makers.
