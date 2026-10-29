@@ -2,7 +2,7 @@
 
 <p align="center"><b>Drive your brick-built trains from your computer or a home-made remote –<br>via Bluetooth, without internet, without an account.</b></p>
 
-<p align="center">🇩🇪 <a href="README.de.md">Deutsche Fassung</a> · <a href="docs/en/install.md">Installation</a> · <a href="docs/en/user-guide.md">User guide</a> · <a href="docs/en/esp-sync.md">Remote</a></p>
+<p align="center">🇩🇪 <a href="README.de.md">Deutsche Fassung</a> · <a href="docs/en/install.md">Installation</a> · <a href="docs/en/user-guide.md">User guide</a> · <a href="docs/en/remote-setup.md">Remote</a></p>
 
 ---
 
@@ -52,7 +52,7 @@ Planned: LEGO Technic Hub, Mould King 6.0.
 1. Download the program for your system from the **releases** page and unpack it.
 2. Start it, switch your hub on, find it under *Settings → Find hubs*, assign a throttle – and off you go.
 
-Step by step: **[Installation](docs/en/install.md)** · **[User guide](docs/en/user-guide.md)** · **[Together with the remote](docs/en/esp-sync.md)**
+Step by step: **[Installation](docs/en/install.md)** · **[User guide](docs/en/user-guide.md)** · **[Set up the remote](docs/en/remote-setup.md)** · **[Together with the remote](docs/en/esp-sync.md)**
 
 Want to try it without a hub first? **Demo mode** simulates three trains (see the user guide).
 
@@ -111,6 +111,7 @@ An ESP32 DevKit, four 75 mm slide pots, four toggle switches with an LED for the
 
 - **[Case](hardware/gehaeuse/README.md)** (German) – 180 × 180 mm desk, every part printable in one colour (build plate from 185 × 185 mm), STL files and a parametric CAD model (SolidCraft, STEP)
 - **[Parts list](hardware/BOM.md)** (German) – electronics, bought parts, screws
+- **[Flash and set up the firmware](docs/en/remote-setup.md)** – already works with a bare ESP32 DevKit
 - Schematic to follow; the pin assignment is in the parts list.
 
 ## For developers

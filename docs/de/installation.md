@@ -23,7 +23,7 @@ Auf der Download-Seite (Releases) die Datei für dein System herunterladen und e
 2. Beim ersten Start mit **Rechtsklick → Öffnen** starten und noch einmal **Öffnen** bestätigen.
 3. Fragt der Mac nach **Bluetooth**, auf **Erlauben** klicken.
 
-Mould-King-Hubs gehen auf dem Mac leider nicht – Apple erlaubt die nötige Art des Funkens nicht. JMC- und LEGO-Hubs gehen. Für Mould King: Linux nehmen – oder einen ESP32 mit der Firmware der [Fernbedienung](esp-abgleich.md) dazwischen parken. Der funkt Mould King selbst und hat eine eigene Webseite (`StudRailMasterQuadro.local`), auf der du im Browser am Mac fährst. Ein nacktes ESP32-DevKit reicht, Potis und Schalter braucht es dafür nicht.
+Mould-King-Hubs gehen auf dem Mac leider nicht – Apple erlaubt die nötige Art des Funkens nicht. JMC- und LEGO-Hubs gehen. Für Mould King: Linux nehmen – oder einen ESP32 mit der Firmware der Fernbedienung dazwischen parken ([so geht's](fernbedienung-einrichten.md)). Der funkt Mould King selbst und hat eine eigene Webseite (`StudRailMasterQuadro.local`), auf der du im Browser am Mac fährst. Ein nacktes ESP32-DevKit reicht, Potis und Schalter braucht es dafür nicht.
 
 ### Linux
 

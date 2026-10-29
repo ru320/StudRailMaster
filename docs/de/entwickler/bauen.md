@@ -143,20 +143,7 @@ pio test -e native                # Protokoll + gemeinsame Treiber-Vektoren auf 
 
 `src/secrets.h` (WLAN, OTA-Passwort) gehört nicht ins Repo; Vorlage ist `src/secrets.h.example`.
 
-## Veröffentlichen (aus dem privaten Repo)
-
-Das Projekt liegt zusammen mit Notizen und Halbfertigem in einem privaten Repo. [`tools/publish.py`](../../../tools/publish.py) kopiert nur, was in [`publish.list`](../../../publish.list) freigegeben ist:
-
-Es gleicht einen Parallelordner ab (Standard `~/Dokumente/stud-rail-master`), der ein eigenes git-Repo ist und 1:1 dem öffentlichen Repo entspricht:
-
-```bash
-python3 tools/publish.py                       # anzeigen, was rausginge
-python3 tools/publish.py --sync                # Parallelordner abgleichen (beim ersten Mal git init)
-python3 tools/publish.py --commit "v0.9.0"     # abgleichen + dort committen
-cd ~/Dokumente/stud-rail-master && git push    # selbst
-```
-
-Sicherungen: nur in git eingecheckte Dateien; eine Sperrliste (Geheimnisse, Logs, Mitschnitte, Einkaufsliste …), die immer gilt; Abbruch, wenn ein Passwort aus `src/secrets.h` in einer Datei steht; das Ziel darf nicht im privaten Repo liegen; committet wird nur mit eigener `user.email` im Zielrepo; es wird nie gepusht.
+Schritt für Schritt für Nachbauer: [Fernbedienung einrichten](../fernbedienung-einrichten.md).
 
 ---
 

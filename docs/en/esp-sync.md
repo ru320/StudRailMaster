@@ -1,8 +1,8 @@
 # Together with the remote
 
-🇩🇪 [Deutsch](../de/esp-abgleich.md) · [User guide](user-guide.md) · [README](../../README.md)
+🇩🇪 [Deutsch](../de/esp-abgleich.md) · [User guide](user-guide.md) · [Set up the remote](remote-setup.md) · [README](../../README.md)
 
-If you have the home-made **ZugFern remote** (Stud Rail Master Quadro), the program works together with it. Both have to be on the same Wi-Fi – or the computer is connected to the remote's own Wi-Fi “ZugFern”.
+If you have the home-made remote **Stud Rail Master Quadro** (setup: [Set up the remote](remote-setup.md)), the program works together with it. Both have to be on the same Wi-Fi – or the computer is connected to the remote's own Wi-Fi (named like its device name, by default “StudRailMasterQuadro”).
 
 Everything is under **Settings → Remote (ESP)**. The **Address** field normally says `StudRailMasterQuadro.local` – upper or lower case does not matter. If you gave the remote a different device name (on its web page under *Settings → Wi-Fi*, e.g. when you have several remotes), enter `device-name.local`. If that does not work, use the remote's IP address (on its own Wi-Fi, which has the same name as the device, it is `192.168.4.1`).
 

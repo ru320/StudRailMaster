@@ -90,7 +90,7 @@ On Linux, the first time, click **Unlock Mould King** and enter your password, s
 
 ### Remote (ESP)
 
-If you have the home-made ZugFern remote, you can exchange hubs between it and the program – see [Remote](esp-sync.md).
+If you have the home-made remote Stud Rail Master Quadro, you can exchange hubs between it and the program – see [Remote](esp-sync.md). How to flash and set it up: [Set up the remote](remote-setup.md).
 
 ## Safety
 

@@ -23,7 +23,7 @@ Download the file for your system from the download page (releases) and unpack i
 2. On first start use **right-click → Open** and confirm **Open** once more.
 3. When the Mac asks about **Bluetooth**, click **Allow**.
 
-Unfortunately Mould King hubs do not work on a Mac – Apple does not allow the kind of radio signal they need. JMC and LEGO hubs work. For Mould King: use Linux – or park an ESP32 running the [remote](esp-sync.md) firmware in between. It drives Mould King itself and has its own web page (`StudRailMasterQuadro.local`) where you drive from the browser on your Mac. A bare ESP32 DevKit is enough, no pots or switches needed.
+Unfortunately Mould King hubs do not work on a Mac – Apple does not allow the kind of radio signal they need. JMC and LEGO hubs work. For Mould King: use Linux – or park an ESP32 running the remote firmware in between ([how to](remote-setup.md)). It drives Mould King itself and has its own web page (`StudRailMasterQuadro.local`) where you drive from the browser on your Mac. A bare ESP32 DevKit is enough, no pots or switches needed.
 
 ### Linux
 

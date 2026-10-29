@@ -143,20 +143,7 @@ pio test -e native                # protocol + shared driver vectors on the PC
 
 `src/secrets.h` (Wi-Fi, OTA password) is not part of the repository; copy `src/secrets.h.example`.
 
-## Publishing (from the private repository)
-
-The project lives in a private repository together with notes and work in progress. [`tools/publish.py`](../../../tools/publish.py) copies only what is released in [`publish.list`](../../../publish.list):
-
-It syncs a parallel folder (default `~/Dokumente/stud-rail-master`) that is its own git repository and matches the public repository 1:1:
-
-```bash
-python3 tools/publish.py                       # show what would be published
-python3 tools/publish.py --sync                # sync the parallel folder (git init on first run)
-python3 tools/publish.py --commit "v0.9.0"     # sync + commit there
-cd ~/Dokumente/stud-rail-master && git push    # yourself
-```
-
-Safety nets: only files committed to git; a block list (secrets, logs, captures, shopping list …) that always applies; it aborts if a password from `src/secrets.h` appears in any file; the target must not be inside the private repository; it only commits with a repository-local `user.email`; it never pushes.
+Step by step for builders: [Set up the remote](../remote-setup.md).
 
 ---
 

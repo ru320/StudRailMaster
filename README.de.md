@@ -2,7 +2,7 @@
 
 <p align="center"><b>Klemmbaustein-Züge vom Computer oder von einer selbst gebauten Fernbedienung aus fahren –<br>per Bluetooth, ohne Internet, ohne Konto.</b></p>
 
-<p align="center">🇬🇧 <a href="README.md">English version</a> · <a href="docs/de/installation.md">Installation</a> · <a href="docs/de/anleitung.md">Anleitung</a> · <a href="docs/de/esp-abgleich.md">Fernbedienung</a></p>
+<p align="center">🇬🇧 <a href="README.md">English version</a> · <a href="docs/de/installation.md">Installation</a> · <a href="docs/de/anleitung.md">Anleitung</a> · <a href="docs/de/fernbedienung-einrichten.md">Fernbedienung</a></p>
 
 ---
 
@@ -52,7 +52,7 @@ Geplant: LEGO Technic Hub, Mould King 6.0.
 1. Das Programm für dein System von der **Releases**-Seite herunterladen und entpacken.
 2. Starten, Hub einschalten, unter *Einstellungen → Hubs suchen* finden, einen Regler zuordnen – und losfahren.
 
-Schritt für Schritt: **[Installation](docs/de/installation.md)** · **[Anleitung](docs/de/anleitung.md)** · **[Zusammen mit der Fernbedienung](docs/de/esp-abgleich.md)**
+Schritt für Schritt: **[Installation](docs/de/installation.md)** · **[Anleitung](docs/de/anleitung.md)** · **[Fernbedienung einrichten](docs/de/fernbedienung-einrichten.md)** · **[Zusammen mit der Fernbedienung](docs/de/esp-abgleich.md)**
 
 Erst mal ohne Hub ausprobieren? Der **Demo-Modus** simuliert drei Züge (siehe Anleitung).
 
@@ -111,6 +111,7 @@ Ein ESP32-DevKit, vier 75-mm-Schiebepotis, vier Kippschalter mit LED für die Ri
 
 - **[Gehäuse](hardware/gehaeuse/README.md)** – 180 × 180 mm Pult, jedes Teil einfarbig druckbar (ab 185 × 185 mm Bauraum), STL-Dateien und parametrisches CAD-Modell (SolidCraft, STEP)
 - **[Stückliste](hardware/BOM.md)** – Elektronik, Kaufteile, Schrauben
+- **[Firmware aufspielen und einrichten](docs/de/fernbedienung-einrichten.md)** – geht auch schon mit einem nackten ESP32-DevKit
 - Schaltplan folgt; die Belegung der Pins steht in der Stückliste.
 
 ## Für Entwickler

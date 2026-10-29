@@ -90,7 +90,7 @@ Unter Linux klickst du beim ersten Mal auf **Mould King freischalten** und gibst
 
 ### Fernbedienung (ESP)
 
-Falls du die selbst gebaute ZugFern-Fernbedienung hast, kannst du Hubs zwischen ihr und dem Programm austauschen – siehe [Fernbedienung](esp-abgleich.md).
+Falls du die selbst gebaute Fernbedienung Stud Rail Master Quadro hast, kannst du Hubs zwischen ihr und dem Programm austauschen – siehe [Fernbedienung](esp-abgleich.md). Wie du sie aufspielst und einrichtest: [Fernbedienung einrichten](fernbedienung-einrichten.md).
 
 ## Sicherheit
 

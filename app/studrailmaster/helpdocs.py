@@ -16,6 +16,8 @@ TOPICS = [
     ("guide", {"de": "anleitung", "en": "user-guide"}, {"de": "Anleitung", "en": "User guide"}),
     ("install", {"de": "installation", "en": "install"}, {"de": "Installation", "en": "Installation"}),
     ("sync", {"de": "esp-abgleich", "en": "esp-sync"}, {"de": "Fernbedienung", "en": "Remote"}),
+    ("remote", {"de": "fernbedienung-einrichten", "en": "remote-setup"},
+     {"de": "Fernbedienung einrichten", "en": "Set up the remote"}),
 ]
 # Nur Nutzer-Kapitel; die Entwickler-Doku (docs/*/entwickler, docs/*/dev) gehört nicht in die Hilfe.
 _FILE_TO_TOPIC = {f: key for key, files, _ in TOPICS for f in files.values()}

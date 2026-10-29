@@ -1,8 +1,8 @@
 # Zusammen mit der Fernbedienung
 
-🇬🇧 [English](../en/esp-sync.md) · [Anleitung](anleitung.md) · [README](../../README.de.md)
+🇬🇧 [English](../en/esp-sync.md) · [Anleitung](anleitung.md) · [Fernbedienung einrichten](fernbedienung-einrichten.md) · [README](../../README.de.md)
 
-Hast du die selbst gebaute **ZugFern-Fernbedienung** (Stud Rail Master Quadro), arbeitet das Programm mit ihr zusammen. Beide müssen dafür im selben WLAN sein – oder der Computer ist mit dem WLAN „ZugFern“ der Fernbedienung verbunden.
+Hast du die selbst gebaute Fernbedienung **Stud Rail Master Quadro** (einrichten: [Fernbedienung einrichten](fernbedienung-einrichten.md)), arbeitet das Programm mit ihr zusammen. Beide müssen dafür im selben WLAN sein – oder der Computer ist mit dem eigenen WLAN der Fernbedienung verbunden (es heißt wie ihr Gerätename, Standard „StudRailMasterQuadro“).
 
 Alles findest du unter **Einstellungen → Fernbedienung (ESP)**. Im Feld **Adresse** steht normalerweise `StudRailMasterQuadro.local` – Groß- und Kleinschreibung ist egal. Hast du der Fernbedienung einen anderen Gerätenamen gegeben (auf ihrer Webseite unter *Einstellungen → WLAN*, zum Beispiel bei mehreren Fernbedienungen), trage `Gerätename.local` ein. Klappt das nicht, nimm die IP-Adresse der Fernbedienung (in ihrem eigenen WLAN, das genauso heißt wie der Gerätename, ist das `192.168.4.1`).
 
