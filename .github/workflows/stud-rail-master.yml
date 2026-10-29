@@ -1,6 +1,8 @@
 # Baut Stud Rail Master für Windows, macOS und Linux und prüft die Treiber auf beiden Seiten.
 # Läuft erst im veröffentlichten Repo (dort liegt dieser Ordner im Wurzelverzeichnis).
 # Tag „v*“ (z. B. v0.9.0) → Release mit den fertigen Programmen.
+# Normaler Push/PR: nur Tests + Linux. Windows und macOS (Mac-Runner bei GitHub knapp)
+# nur bei Tag oder von Hand („Run workflow“).
 name: Stud Rail Master
 
 on:
@@ -29,13 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest
-            artifact: StudRailMaster-windows
-          - os: macos-14
-            artifact: StudRailMaster-macos
-          - os: ubuntu-22.04
-            artifact: StudRailMaster-linux
+        include: ${{ fromJSON((startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch') && '[{"os":"windows-latest","artifact":"StudRailMaster-windows"},{"os":"macos-14","artifact":"StudRailMaster-macos"},{"os":"ubuntu-22.04","artifact":"StudRailMaster-linux"}]' || '[{"os":"ubuntu-22.04","artifact":"StudRailMaster-linux"}]') }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
