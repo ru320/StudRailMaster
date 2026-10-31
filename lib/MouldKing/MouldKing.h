@@ -12,7 +12,7 @@
 //   Fahren   7D id0 id1 [6 Byte, ein Nibble pro Kanal] 82
 // Ein Telegramm steuert 3 Slots × 4 Ports (Slot per Taste am Hub, nach dem Einschalten 0).
 // Nibble: 8 = Stopp, 9…F = vorwärts Stufe 1…7, 1…7 = rückwärts Stufe 1…7 (7 = voll rückwärts,
-// am Hub geprüft 28.10.2026; wie mkconnect-python, moldqueen hat es falsch).
+// am Hub geprüft; wie mkconnect-python, moldqueen hat es falsch).
 namespace mk {
 
 constexpr uint16_t COMPANY_ID = 0xFFF0;

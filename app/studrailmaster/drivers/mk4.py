@@ -8,7 +8,7 @@ Klartext:
     Connect  AD id0 id1 80 80 80 chk 52
     Fahren   7D id0 id1 [6 Byte, ein Nibble pro Port] 82
 Ein Telegramm steuert 3 Slots × 4 Ports. Nibble: 8 = Stopp, 9…F = vorwärts Stufe 1…7,
-1…7 = rückwärts Stufe 1…7 (am Hub geprüft 28.10.2026).
+1…7 = rückwärts Stufe 1…7 (am Hub geprüft).
 Verschlüsselung nach MouldKingCrypt (github.com/J0EK3R/mkconnect-python).
 """
 from .base import AdvertDriver

@@ -23,7 +23,7 @@ MAX_REVERSE_MS = 20000
 MAX_NAME = 40
 MAX_NOTE = 500
 ESP_HOST = "StudRailMasterQuadro.local"  # Standard-Gerätename der Fernbedienung
-OLD_ESP_HOST = "zugfern.local"  # bis Firmware 29.10.2026, wird beim Laden ersetzt
+OLD_ESP_HOST = "zugfern.local"  # Name älterer Firmware, wird beim Laden ersetzt
 
 _MAC = re.compile(r"^[0-9a-f]{2}(:[0-9a-f]{2}){5}$")
 _UUID = re.compile(r"^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$")  # macOS

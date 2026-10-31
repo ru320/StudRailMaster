@@ -3,7 +3,7 @@
 
 using namespace mk;
 
-// Verschlüsselte Herstellerdaten aus dem HCI-Mitschnitt der App „MK Tech“ (28.10.2026)
+// Verschlüsselte Herstellerdaten aus dem HCI-Mitschnitt der App „MK Tech“
 static const uint8_t CAP_CONNECT[CRYPT_LEN] = {0x6d, 0xb6, 0x43, 0xcf, 0x7e, 0x8f, 0x47, 0x11, 0x48, 0x38, 0x6b, 0x38,
                                                0xd1, 0x7a, 0xcd, 0xe6, 0x63, 0x25, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
 // Fahren, alles Stopp: 7D 25 95 88 88 88 88 88 88 82

@@ -26,13 +26,14 @@ Ein Pult-Gehäuse (180 × 180 mm, 22 → 46 mm hoch) für die ESP32-Fernsteuerun
 | `Breite`, `Tiefe`, `H_Nutzer`, `H_IR` | Außenmaße und Pultneigung |
 | `Wand`, `Spiel` | Wandstärke, Luft zwischen gesteckten Teilen |
 | `Fader_Weg`, `Hebel_D`, `Hebel_B`, `Lasche_A` | Schiebepoti (Weg, Hebel, Klemmlaschen) |
+| `Platine_D` | Stärke der Fader-Platine |
 | `MX_Kreuz`, `Kappe_Unten` | Höhe der Not-Stopp-Kappe über dem Cherry MX |
 | `Fach_B`, `Fach_T`, `Fach_H` | Batteriefach (innen) |
 | `USB_Z` | Höhe des Micro-USB-Langlochs |
 | `Ring_H`, `Ring_Ueber` | Zierring |
 | `Rund_Aussen`, `Rund_Fuge` | Kantenverrundungen |
 
-Nach einer Änderung baut sich die Zeitleiste neu auf. Danach die Körper einzeln als STL exportieren und im Slicer aufs Bett legen (Oberschale: Pultseite nach unten; Frontplatte, Fader-Rahmen, Knöpfe und Kappe liegen im Modell schräg).
+Nach einer Änderung baut sich die Zeitleiste neu auf. Danach die Körper einzeln als STL exportieren und im Slicer aufs Bett legen (Oberschale: Pultseite nach unten; Frontplatte, Knöpfe und Kappe liegen im Modell schräg).
 
 ## Druckteile
 
@@ -46,9 +47,7 @@ Nach einer Änderung baut sich die Zeitleiste neu auf. Danach die Körper einzel
 | `zierring.stl` | 1 | Orange/Gelb | flach | die farbige Kante in der Fuge |
 | `faderknopf_1.stl` | **4** | Orange/Gelb | Oberseite unten | |
 | `notstopp_kappe.stl` | 1 | Rot | Oberseite unten | |
-| `esp_halter.stl` | 1 | beliebig | Boden unten | ESP32-DevKit liegt kopfüber darin |
-| `mt3608_halter.stl` | 1 | beliebig | Boden unten | mit Tasche für die Diode SS14 |
-| `fader_rahmen.stl` | 1 | beliebig | flach | hält die 4 Schiebepotis |
+| `funk_halter.stl` | 1 | beliebig | Boden unten | hält das Funkmodul nRF24L01+ hochkant |
 
 PLA oder PETG, Düse 0,4 mm, Schicht 0,2 mm, mindestens 3 Wände, Füllung 15–20 %.
 
@@ -64,25 +63,22 @@ Die Schrift steht erhaben auf der Frontplatte (Platte 2,4 mm; gelb +0,4 mm: Logo
 - **Frontplatte von unten eingesetzt:** Sie liegt unter dem Rahmen der Oberschale, der sie 6,5 mm überdeckt.
 - **4 Klemmsäulen** der Unterschale drücken die Frontplatte gegen den Rahmen. Die Dome der Oberschale greifen durch Aussparungen am Plattenrand in die Säulen. **4 × M3 × 10 von unten** halten Unterschale, Zierring, Frontplatte und Oberschale zusammen. Von außen ist oben keine Schraube zu sehen.
 - **Zierring:** Er liegt in der Fuge über die ganze Wandbreite und wird eingeklemmt. Innen führt ihn der Zentrierrand der Unterschale. Er steht 0,4 mm über die Wand und ist nirgends unterbrochen.
-- **Schiebepotis (B103, 75 mm, 60 mm Weg)** sitzen im **Fader-Rahmen**:
-  - Ihre zwei Klemmlaschen stecken durch Schlitze und werden darunter verdreht, wie auf einer Platine. Dort ist der Rahmen auf 1,6 mm ausgedünnt.
-  - Die Lötpins ragen durch Fenster, angeschlossen wird mit Litze.
-  - Der Rahmen ist auf 4 Säulen geschraubt und drückt die Fader gegen die Frontplatte.
+- **Schiebepotis (B103, 75 mm, 60 mm Weg)** sitzen auf der **Fader-Platine** ([../platinen/](../platinen/README.md)). Sie ist auf 4 Säulen geschraubt und drückt die Fader gegen die Frontplatte.
 - **Not-Stopp:** Cherry MX rastet in die Frontplatte ein (14 × 14 mm bei 1,5 mm Plattenstärke). Die rote Kappe läuft in einer Führungsbuchse und kann nicht kippen.
-- **ESP32-DevKit** liegt kopfüber (Pins oben) im ESP-Halter links. Die **Micro-USB-Buchse** zeigt nach vorn auf ein Langloch 12 × 8 mm unter dem Zierring. Darüber laufen Strom und Programmieren.
-- **Stromversorgung:** 4 × AA → Ein/Aus → MT3608 (auf **5,0 V** einstellen, *bevor* der ESP angeschlossen wird) → Diode SS14 → 5-V-Pin des DevKits. Die SS14 sitzt in einer Tasche am MT3608-Halter.
+- **Hauptplatine** liegt waagrecht links hinten auf 4 Säulen der Unterschale. Das **ESP32-DevKit** hängt kopfüber (Pins oben) darunter, seine Stiftleisten sind durch die Hauptplatine gesteckt und verlötet. Die **Micro-USB-Buchse** zeigt nach vorn auf ein Langloch 12 × 8 mm unter dem Zierring. Darüber laufen Strom und Programmieren.
+- **Stromversorgung:** 4 × AA → Ein/Aus → MT3608 (auf **5,0 V** einstellen, *bevor* der ESP angeschlossen wird) → Schottky-Diode 1N5819 → 5-V-Pin des DevKits. Das MT3608-Modul hängt unter der Hauptplatine.
 - **Batteriefach** rechts, innen 65,5 × 70 × 23,5 mm, für einen Halter 4 × AA bis 69 × 65 × 23 mm. Den Halter unter den Auflagerahmen kleben. Der Deckel wird von unten verschraubt.
+- **Funkmodul (2,4 GHz):** Ein nRF24L01+ steht hochkant im Funk-Halter unter dem Not-Stopp, die Stiftleiste zur Nutzerseite, die Antenne nach rechts. 8 Dupont-Kabel gehen zu J12 der Hauptplatine. Der Halter ist mit 2 × M3 × 8 (Senkkopf) von unten verschraubt.
 - **IR-Sender:** Ein Block innen an der Stirnwand nimmt 4 IR-LEDs (5 mm) auf: eine geradeaus, zwei je 30° seitlich, eine 45° nach oben. Außen gibt es eine Mulde für 1,5 mm IR-Acryl (62 × 15 mm).
 
 ## Zusammenbau
 
 1. Gewindeeinsätze M3 setzen:
    - Oberschale: 4 Dome, von unten
-   - Unterschale: 4 Säulen für den Fader-Rahmen, 2 am Batteriedeckel
-   - ESP-Halter: 2
-   - MT3608-Halter: 1
-2. Fader in den Rahmen stecken, Laschen verdrehen, Litzen anlöten. Den Rahmen auf die Säulen schrauben (4 × M3 × 6).
-3. ESP-Halter und MT3608-Halter von unten anschrauben (Senkkopf M3 × 8). ESP und MT3608 einrasten, die SS14 in die Tasche legen. Den Batteriehalter unter den Auflagerahmen kleben. Verdrahten.
+   - Unterschale: 4 Säulen für die Fader-Platine, 4 für die Hauptplatine, 2 am Batteriedeckel
+   - Funk-Halter: 2
+2. Platinen bestücken (siehe [../platinen/](../platinen/README.md)). Die Fader-Platine auf ihre Säulen schrauben (4 × M3 × 6).
+3. Die Hauptplatine mit ESP und MT3608 auf ihre Säulen schrauben (4 × M3 × 6). Den Funk-Halter von unten anschrauben (2 × M3 × 8 Senkkopf), das Funkmodul in den Schlitz stecken. Den Batteriehalter unter den Auflagerahmen kleben. Kabel zu Schaltern, LEDs, Funkmodul und Fader-Platine stecken.
 4. In der Frontplatte Kippschalter (Mutter oben), LEDs und den MX-Schalter montieren. Die IR-LEDs in den Block der Oberschale stecken, das IR-Acryl außen einkleben.
 5. Frontplatte von unten in die Oberschale legen, die Aussparungen kommen um die Dome.
 6. Zierring auf die Unterschale legen. Oberschale aufsetzen und dabei die Fader-Hebel durch die Schlitze führen. Mit 4 × M3 × 10 von unten verschrauben.
@@ -92,6 +88,5 @@ Die Schrift steht erhaben auf der Frontplatte (Platte 2,4 mm; gelb +0,4 mm: Logo
 
 - **Not-Stopp-Kappe** zuerst allein drucken und auf den MX-Schalter stecken. `MX_Kreuz` (10,5 mm) ist die angenommene Höhe der Kappenaufnahme über der Platte.
 - **Faderknopf** auf einen Fader stecken. Die Aufnahme misst 1,5 × 4,3 mm, der Hebel 1,2 × 4 mm.
-- **Fader-Rahmen:** Passen die Klemmlaschen in die Schlitze (`Lasche_A` = 25 mm von der Mitte)?
 - **Kippschalter:** Das Modell geht von 13 × 8 × 10 mm Körper und M6-Gewinde aus.
 - Tipp: Erst einen Streifen der Frontplatte mit einem Kanal und dem Not-Stopp drucken. Dafür in OrcaSlicer schneiden.
